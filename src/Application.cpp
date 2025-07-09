@@ -1,1 +1,25 @@
 #include "Application.hpp"
+
+Application::Application(const int width, const int height, const char* title)
+ : mWindow(width, height, title) {
+
+    int version = gladLoadGL();
+    if (!version) throw std::runtime_error("Failed to initialize OpenGL context with GLAD");
+
+    int framebufferWidth, framebufferHeight;
+    glfwGetFramebufferSize(mWindow.GetWindow(), &framebufferWidth, &framebufferHeight);
+
+    mRenderer.SetViewport(0, 0, width, height);
+    mRenderer.SetFramebufferSize(framebufferWidth, framebufferHeight);
+}
+
+void Application::Run() {
+    while (!mWindow.ShouldClose()) {
+        glfwPollEvents();
+
+        glClearColor(0.3f, 0.75f, 0.2f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        mWindow.SwapBuffer();
+    }
+}

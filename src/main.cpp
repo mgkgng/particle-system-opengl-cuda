@@ -1,5 +1,8 @@
-#include <iostream>
+#include "Application.hpp"
 
 int main() {
-    std::cout << "it should work" << std::endl;
+    Application app(400, 400, "Particle Systems");
+
+    app.Run();
+
 }
