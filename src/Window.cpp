@@ -2,10 +2,12 @@
 
 Window::Window(const int width, const int height, const char* title) {
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
@@ -15,5 +17,5 @@ Window::Window(const int width, const int height, const char* title) {
         throw std::runtime_error("Failed to create windowd with GLFW.");
     }
 
-    glfwMakeContextCurrent(mWindow);
+    glfwMakeContextCurrent(mWindow);    
 }

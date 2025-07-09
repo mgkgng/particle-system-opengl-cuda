@@ -9,8 +9,12 @@ Application::Application(const int width, const int height, const char* title)
     int framebufferWidth, framebufferHeight;
     glfwGetFramebufferSize(mWindow.GetWindow(), &framebufferWidth, &framebufferHeight);
 
-    mRenderer.SetViewport(0, 0, width, height);
+    mRenderer.InitBuffers();
+    mRenderer.SetViewport(0, 0, framebufferWidth, framebufferHeight);
     mRenderer.SetFramebufferSize(framebufferWidth, framebufferHeight);
+
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "GLSL version: "   << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 }
 
 void Application::Run() {
@@ -19,6 +23,8 @@ void Application::Run() {
 
         glClearColor(0.3f, 0.75f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        mRenderer.Draw();
 
         mWindow.SwapBuffer();
     }
