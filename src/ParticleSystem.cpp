@@ -29,7 +29,7 @@ ParticleSystem::ParticleSystem(size_t maxParticleNb) : mMaxParticleNb(maxParticl
         const float b = col_dis(gen);
 
         particles[i].position = glm::vec4(x, y, z, 1.0f);
-        particles[i].velocity = glm::vec4(0.0f);
+        particles[i].velocity = glm::vec4(x * 2, y * 2, z * 2, 0.0f);
         particles[i].color = glm::vec4(r, g, b, 1.0f);
         particles[i].lifespan = 100.0;
     }
@@ -40,7 +40,11 @@ void ParticleSystem::Emit() {}
 
 void ParticleSystem::Update() {
     mComputeShader->Use();
-    mComputeShader->Compute(256, 1, 1);
+
+    GLuint workGroupSize = 256;
+    GLuint numGroups = (mMaxParticleNb + workGroupSize - 1) / workGroupSize;
+    std::cout << "num groups: " << numGroups << std::endl;
+    mComputeShader->Compute(numGroups, 1, 1);
 
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }

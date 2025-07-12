@@ -19,7 +19,7 @@ void Application::Run() {
     while (!mWindow.ShouldClose()) {
         mParticleSystem.Update();
 
-        glClearColor(0.3f, 0.75f, 0.2f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         mRenderer.Draw(mParticleSystem.GetCount());
