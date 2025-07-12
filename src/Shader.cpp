@@ -1,6 +1,7 @@
 #include "Shader.hpp"
 
 const std::string SHADER_PATH = "assets/shaders/";
+const std::string KERNEL_PATH = "assets/kernels/";
 
 Shader::Shader(const std::string& name) {
     const std::string vertexStr = loadFileSource(SHADER_PATH + name + "/vertex.glsl");
@@ -16,35 +17,57 @@ Shader::Shader(const std::string& name) {
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSrc, NULL);
     glCompileShader(vertexShader);
-    CheckCompileError(vertexShader, GL_SHADER);
+    CheckCompileError(vertexShader, "SHADER");
 
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentSrc, NULL);
     glCompileShader(fragmentShader);
-    CheckCompileError(fragmentShader, GL_SHADER);
+    CheckCompileError(fragmentShader, "SHADER");
 
     mID = glCreateProgram();
     glAttachShader(mID, vertexShader);
     glAttachShader(mID, fragmentShader);
     glLinkProgram(mID);
-    CheckCompileError(mID, GL_PROGRAM);
+    CheckCompileError(mID, "PROGRAM");
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 }
 
-void Shader::CheckCompileError(GLuint id, int type) {
+ComputeShader::ComputeShader(const std::string& name) : Shader() {
+    const std::string shaderStr = loadFileSource(SHADER_PATH + name + "/compute.glsl");
+
+    if (shaderStr.empty()) {
+        throw std::runtime_error("Error: Empty shader source");
+    }
+
+    const char *shaderSrc = shaderStr.c_str();
+
+    GLuint shader = glCreateShader(GL_COMPUTE_SHADER);
+    glShaderSource(shader, 1, &shaderSrc, NULL);
+    glCompileShader(shader);
+    CheckCompileError(shader, "SHADER");
+
+    mID = glCreateProgram();
+    glAttachShader(mID, shader);
+    glLinkProgram(mID);
+    CheckCompileError(mID, "PROGRAM");
+
+    glDeleteShader(shader);
+}
+
+void Shader::CheckCompileError(GLuint id, const std::string& type) {
     int success;
     char infoLog[1024];
 
-    if (type == GL_SHADER) {
+    if (type == "SHADER") {
         glGetShaderiv(id, GL_COMPILE_STATUS, &success);
         if (!success) {
             glGetShaderInfoLog(id, 1024, NULL, infoLog);
             std::cerr << "Error while compiling shader:\n" << infoLog << std::endl;
             exit(EXIT_FAILURE);
         }
-    } else {
+    } else if (type == "PROGRAM") {
         glGetProgramiv(id, GL_LINK_STATUS, &success);
         if (!success) {
             glGetProgramInfoLog(id, 1024, NULL, infoLog);

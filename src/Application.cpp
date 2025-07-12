@@ -1,15 +1,11 @@
 #include "Application.hpp"
 
 Application::Application(const int width, const int height, const char* title)
- : mWindow(width, height, title) {
-
-    int version = gladLoadGL();
-    if (!version) throw std::runtime_error("Failed to initialize OpenGL context with GLAD");
+ : mWindow(width, height, title), mParticleSystem(MAX_PARTICLE_NBS) {
 
     int framebufferWidth, framebufferHeight;
     glfwGetFramebufferSize(mWindow.GetWindow(), &framebufferWidth, &framebufferHeight);
 
-    mRenderer.InitBuffers();
     mRenderer.SetViewport(0, 0, framebufferWidth, framebufferHeight);
     mRenderer.SetFramebufferSize(framebufferWidth, framebufferHeight);
 
@@ -21,10 +17,12 @@ Application::Application(const int width, const int height, const char* title)
 
 void Application::Run() {
     while (!mWindow.ShouldClose()) {
+        mParticleSystem.Update();
+
         glClearColor(0.3f, 0.75f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-        mRenderer.Draw();
+        mRenderer.Draw(mParticleSystem.GetCount());
 
         mWindow.SwapBuffer();
         mWindow.PollEvents();

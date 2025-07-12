@@ -2,6 +2,7 @@
 
 #include "Renderer.hpp"
 #include "InputHandler.hpp"
+#include "ParticleSystem.hpp"
 
 class Application {
 
@@ -18,4 +19,5 @@ private:
     Window mWindow;
     Renderer mRenderer;
     InputHandler mInputHandler;
+    ParticleSystem mParticleSystem;
 };

@@ -12,7 +12,6 @@ void InputHandler::onCursorPos(double xpos, double ypos) {
     std::cout << "curos pos " << xpos << " " << ypos << std::endl;
 }
 
-
 void InputHandler::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     auto* input = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
     if (input) input->onKey(key, scancode, action, mods);
