@@ -29,6 +29,4 @@ public:
     ComputeShader(const std::string& name);
     
     void Compute(size_t x, size_t y, size_t z) { glDispatchCompute(x, y, z); }
-
-    void SetMemoryBarrier() { glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT); }
 };

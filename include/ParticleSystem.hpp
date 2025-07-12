@@ -3,13 +3,16 @@
 #include "BufferObject.hpp"
 #include "Shader.hpp"
 
+#include <random>
+
 constexpr size_t MAX_PARTICLE_NBS = 500000;
 
 struct Particle {
-    glm::vec3 pos;
-    glm::vec3 velocity;
-    float lifetime;
-    
+    glm::vec4 position;
+    glm::vec4 velocity;
+    glm::vec4 color;
+    float lifespan;
+    float _pad1, pad2, pad3;
 };
 
 class ParticleSystem {

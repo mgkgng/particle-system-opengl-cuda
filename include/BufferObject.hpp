@@ -27,6 +27,13 @@ public:
 
         glBindBufferBase(mTarget, index, mID);
     }
+
+    void* MapBuffer(GLenum access) {
+        glBindBuffer(mTarget, mID);
+        return glMapBuffer(mTarget, access);
+    }
+
+    void UnmapBuffer() { glUnmapBuffer(mTarget); }
     
 private:
     GLenum mTarget;

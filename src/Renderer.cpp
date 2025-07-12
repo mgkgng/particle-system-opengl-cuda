@@ -3,12 +3,14 @@
 Renderer::Renderer() {
     std::cout << "Renderer Initialization start." << std::endl;
     mShader = std::make_unique<Shader>("particles");
+    mVAO = std::make_unique<VertexArrayObject>();
+    // mVAO->Bind();
+
 
 }
 
 // void Renderer::InitBuffers() {
 //     mShader = std::make_unique<Shader>("test");
-//     mVAO = std::make_unique<VertexArrayObject>();
 //     mVBO = std::make_unique<BufferObject>(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 //     mEBO = std::make_unique<BufferObject>(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
 
@@ -30,7 +32,7 @@ void Renderer::SetFramebufferSize(const int width, const int height) {
 
 void Renderer::Draw(size_t particleNb) {
     mShader->Use();
-    // mVAO->Bind();
+    mVAO->Bind();
     // mEBO->Bind();
     glDrawArrays(GL_POINTS, 0, particleNb);
 }
