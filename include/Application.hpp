@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer.hpp"
+#include "InputHandler.hpp"
 
 class Application {
 
@@ -16,4 +17,5 @@ void Run();
 private:
     Window mWindow;
     Renderer mRenderer;
+    InputHandler mInputHandler;
 };
