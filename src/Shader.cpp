@@ -34,6 +34,18 @@ Shader::Shader(const std::string& name) {
     glDeleteShader(fragmentShader);
 }
 
+GLint Shader::GetUniformLocation(const std::string& name) {
+    auto it = mUniformLocations.find(name);
+    if (it != mUniformLocations.end()) return it->second;
+
+    GLint location = glGetUniformLocation(mID, name.c_str());
+    if (location == -1) {
+        std::cerr << "Warning: Uniform '" << name << "' cannot be found." << std::endl; 
+    }
+    mUniformLocations[name] = location;
+    return location;
+}
+
 ComputeShader::ComputeShader(const std::string& name) : Shader() {
     const std::string shaderStr = loadFileSource(SHADER_PATH + name + "/compute.glsl");
 

@@ -14,8 +14,6 @@ public:
         glVertexAttribPointer(index, count, type, normalized, stride, offset);
         glEnableVertexAttribArray(index);
     }
-
-
 private:
     GLuint mID;
 };

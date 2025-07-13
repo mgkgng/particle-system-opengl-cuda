@@ -12,10 +12,11 @@ layout(std430, binding = 0) buffer ParticleData {
     Particle particles[];
 };
 
+uniform mat4 uProjView;
 out vec4 vColor;
 
 void main() {
     Particle p = particles[gl_VertexID];
     vColor = p.color;
-    gl_Position = p.position;
+    gl_Position = uProjView * p.position;
 }

@@ -3,6 +3,7 @@
 #include "Renderer.hpp"
 #include "InputHandler.hpp"
 #include "ParticleSystem.hpp"
+#include "Camera.hpp"
 
 class Application {
 
@@ -17,6 +18,7 @@ void Run();
 
 private:
     Window mWindow;
+    Camera mCamera;
     Renderer mRenderer;
     InputHandler mInputHandler;
     ParticleSystem mParticleSystem;

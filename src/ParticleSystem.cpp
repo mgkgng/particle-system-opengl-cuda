@@ -12,11 +12,13 @@ ParticleSystem::ParticleSystem(size_t maxParticleNb) : mMaxParticleNb(maxParticl
     mSSBO->InitializeData(nullptr, sizeof(Particle) * mMaxParticleNb);
     mSSBO->BindIndexedTarget(0);
 
-    // GLint maxWorkGroupSize[3];
-    // for (size_t i = 0; i < 3; ++i) {
-    //     glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, i, &maxWorkGroupSize[i]);
-    //     std::cout << "max work group size for index " << i << ": " << maxWorkGroupSize[i] << std::endl;
-    // }
+#ifdef DEBUG_ON
+    GLint maxWorkGroupSize[3];
+    for (size_t i = 0; i < 3; ++i) {
+        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, i, &maxWorkGroupSize[i]);
+        std::cout << "max work group size for index " << i << ": " << maxWorkGroupSize[i] << std::endl;
+    }
+#endif
 
     Particle* particles = static_cast<Particle*>(mSSBO->MapBuffer(GL_WRITE_ONLY));
     for (size_t i = 0; i < mMaxParticleNb; i++) {
@@ -43,7 +45,7 @@ void ParticleSystem::Update() {
 
     GLuint workGroupSize = 256;
     GLuint numGroups = (mMaxParticleNb + workGroupSize - 1) / workGroupSize;
-    std::cout << "num groups: " << numGroups << std::endl;
+    //std::cout << "num groups: " << numGroups << std::endl;
     mComputeShader->Compute(numGroups, 1, 1);
 
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);

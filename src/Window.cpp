@@ -23,6 +23,7 @@ Window::Window(const int width, const int height, const char* title) {
     glfwSetKeyCallback(mWindow, InputHandler::keyCallback);
     glfwSetMouseButtonCallback(mWindow, InputHandler::mouseButtonCallback);
     glfwSetCursorPosCallback(mWindow, InputHandler::cursorPosCallback);
+    glfwSetScrollCallback(mWindow, InputHandler::scrollCallback);
 
     int version = gladLoadGL();
     if (!version) throw std::runtime_error("Failed to initialize OpenGL context with GLAD");

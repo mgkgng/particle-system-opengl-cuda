@@ -1,29 +1,10 @@
 #include "Renderer.hpp"
 
-Renderer::Renderer() {
+Renderer::Renderer(Camera* camera) : mCamera(camera) {
     std::cout << "Renderer Initialization start." << std::endl;
     mShader = std::make_unique<Shader>("particles");
     mVAO = std::make_unique<VertexArrayObject>();
-    // mVAO->Bind();
-
-
 }
-
-// void Renderer::InitBuffers() {
-//     mShader = std::make_unique<Shader>("test");
-//     mVBO = std::make_unique<BufferObject>(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-//     mEBO = std::make_unique<BufferObject>(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
-
-//     mVAO->Bind();
-//     mVBO->InitializeData(&triangleVertices[0], sizeof(triangleVertices));
-//     mEBO->InitializeData(&triangleIndices[0], sizeof(triangleIndices));
-
-//     mVAO->SetAttribute(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
-//     mVAO->SetAttribute(1, 3, GL_FLOAT, GL_FALSE, 24, (void*) 12);
-    
-//     mVAO->Unbind();
-//     mVBO->Unbind();
-// }
 
 void Renderer::SetFramebufferSize(const int width, const int height) {
     mFramebufferWidth = width;
@@ -33,6 +14,11 @@ void Renderer::SetFramebufferSize(const int width, const int height) {
 void Renderer::Draw(size_t particleNb) {
     mShader->Use();
     mVAO->Bind();
-    // mEBO->Bind();
+
+    if (mCamera->IsUpdated()) {
+        mShader->SetUniform("uProjView", mCamera->GetViewProjMatrix());
+        mCamera->SetUpdated(false);
+    }
+
     glDrawArrays(GL_POINTS, 0, particleNb);
 }
