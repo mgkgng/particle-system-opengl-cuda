@@ -20,25 +20,42 @@ file(GLOB SRC_FILES "src/*.cpp")
 list(FILTER SRC_FILES EXCLUDE REGEX "glad\\.c$")
 set(GLAD_SRC src/glad/glad.c)
 
-add_executable(particle_system
+# Define the executable
+add_executable(${EXECUTABLE_NAME}
     ${SRC_FILES}
     ${GLAD_SRC}
 )
 
-# Includes
-target_include_directories(particle_system PRIVATE
+# Include directories
+target_include_directories(${EXECUTABLE_NAME} PRIVATE
     include
     src/glad
     externals/glfw/include
-    externals/glm        # for GLM headers
+    externals/glm
 )
 
-# Link libraries
-target_link_libraries(particle_system PRIVATE
-    glfw
-    glm::glm
-    dl
-    pthread
-    m
-    GL
-)
+# Platform-specific linking
+if(WIN32)
+    target_link_libraries(${EXECUTABLE_NAME} PRIVATE
+        glfw
+        glm::glm
+        opengl32
+    )
+elseif(UNIX AND NOT APPLE)
+    target_link_libraries(${EXECUTABLE_NAME} PRIVATE
+        glfw
+        glm::glm
+        ${CMAKE_DL_LIBS}
+        pthread
+        m
+        GL
+    )
+elseif(APPLE)
+    target_link_libraries(${EXECUTABLE_NAME} PRIVATE
+        glfw
+        glm::glm
+        "-framework OpenGL"
+        "-framework Cocoa"
+        "-framework IOKit"
+    )
+endif()
