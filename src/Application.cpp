@@ -21,6 +21,36 @@ Application::Application(const int width, const int height, const char* title)
 #endif
 }
 
+bool Application::InitCUDA() {
+    int deviceCount = 0;
+    cudaError_t err = cudaGetDeviceCount(&deviceCount);
+    if (err != cudaSuccess || deviceCount == 0) {
+        std::cerr << "No CUDA-compatible GPU found: " << cudaGetErrorString(err) << std::endl;
+        return false;
+    }
+
+    std::cout << "[CUDA] " << deviceCount << " device(s) found." << std::endl;
+
+    cudaSetDevice(0);
+    cudaDeviceProp deviceProp;
+    cudaGetDeviceProperties(&deviceProp, 0);
+    
+    std::cout << "[CUDA] Device Name: " << deviceProp.name << std::endl;
+    std::cout << "[CUDA] Compute Capability: " << deviceProp.major << "." << deviceProp.minor << std::endl;
+    std::cout << "[CUDA] Total Global Memory: " << deviceProp.totalGlobalMem / (1024 * 1024) << " MB" << std::endl;
+
+    // Testing kernel launch
+    int* devPtr = nullptr;
+    if(cudaMalloc(&devPtr, sizeof(int)) != cudaSuccess) {
+        std::cerr << "[CUDA] Memory allocation failed: " << cudaGetErrorString(err) << std::endl;
+        return false;
+    }
+    cudaFree(devPtr);
+
+    std::cout << "[CUDA] Initialization completed successfully." << std::endl;
+    return true;
+}
+
 void Application::Run() {
     while (!mWindow.ShouldClose()) {
         mParticleSystem.Update();

@@ -1,3 +1,1 @@
-__global__ test() {
-    
-}
+__global__ void dummy() {}

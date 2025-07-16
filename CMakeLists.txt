@@ -1,14 +1,26 @@
 cmake_minimum_required(VERSION 3.15)
-project(ParticleSystem)
+project(ParticleSystem LANGUAGES CXX CUDA)
 
+# cpp configuration
 set(CMAKE_CXX_STANDARD 20)
 
-# GLFW config
+# cuda configuration
+set(CMAKE_CUDA_STANDARD 17)
+set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
+
+# Avoid building in source directory
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
+    message(FATAL_ERROR "In-source builds are not allowed. Please create a separate 'build/' directory.")
+endif()
+
+# Platform-specific executable name
+set(EXECUTABLE_NAME "particle_system")
+
+# Disable unnecessary GLFW/GLM targets
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
-# GLM config (disable test building)
 set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
 
 # Add third-party dependencies
@@ -19,6 +31,9 @@ add_subdirectory(externals/glm)
 file(GLOB SRC_FILES "src/*.cpp")
 list(FILTER SRC_FILES EXCLUDE REGEX "glad\\.c$")
 set(GLAD_SRC src/glad/glad.c)
+
+file(GLOB CUDA_SOURCES "assets/kernels/*.cu")
+list(APPEND SRC_FILES ${CUDA_SOURCES})
 
 # Define the executable
 add_executable(${EXECUTABLE_NAME}
@@ -40,6 +55,8 @@ if(WIN32)
         glfw
         glm::glm
         opengl32
+        cuda
+        cudart
     )
 elseif(UNIX AND NOT APPLE)
     target_link_libraries(${EXECUTABLE_NAME} PRIVATE
@@ -49,6 +66,8 @@ elseif(UNIX AND NOT APPLE)
         pthread
         m
         GL
+        cuda
+        cudart
     )
 elseif(APPLE)
     target_link_libraries(${EXECUTABLE_NAME} PRIVATE
@@ -57,5 +76,7 @@ elseif(APPLE)
         "-framework OpenGL"
         "-framework Cocoa"
         "-framework IOKit"
+        cuda
+        cudart
     )
 endif()
