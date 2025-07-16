@@ -10,8 +10,9 @@
 class Renderer {
 
 public:
-    Renderer(Camera* camera);
+    Renderer(GLFWwindow* window, Camera* camera);
 
+    void Clear();
     void Draw(size_t particleNb);
 
     void SetViewport(const int x, const int y, const int width, const int height) { glViewport(x, y, width, height); }
