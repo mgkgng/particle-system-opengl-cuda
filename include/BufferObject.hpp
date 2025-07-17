@@ -24,7 +24,7 @@ public:
         if (mTarget != GL_ATOMIC_COUNTER_BUFFER && mTarget != GL_TRANSFORM_FEEDBACK_BUFFER && mTarget != GL_UNIFORM_BUFFER && mTarget != GL_SHADER_STORAGE_BUFFER) {
             std::runtime_error("Wrong buffer target for the bind operation.");
         }
-
+        
         glBindBufferBase(mTarget, index, mID);
     }
 
@@ -34,6 +34,8 @@ public:
     }
 
     void UnmapBuffer() { glUnmapBuffer(mTarget); }
+
+    GLuint GetID() const { return mID; }
     
 private:
     GLenum mTarget;

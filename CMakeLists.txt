@@ -32,18 +32,22 @@ file(GLOB SRC_FILES "src/*.cpp")
 list(FILTER SRC_FILES EXCLUDE REGEX "glad\\.c$")
 set(GLAD_SRC src/glad/glad.c)
 
-file(GLOB CUDA_SOURCES "assets/kernels/*.cu")
+file(GLOB CUDA_SOURCES "src/cuda/*.cu")
 list(APPEND SRC_FILES ${CUDA_SOURCES})
+
+file(GLOB CUDA_HEADERS "include/cuda/*.cuh")
 
 # Define the executable
 add_executable(${EXECUTABLE_NAME}
     ${SRC_FILES}
     ${GLAD_SRC}
+    ${CUDA_HEADERS}
 )
 
 # Include directories
 target_include_directories(${EXECUTABLE_NAME} PRIVATE
     include
+    include/cuda
     src/glad
     externals/glfw/include
     externals/glm

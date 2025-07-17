@@ -2,18 +2,12 @@
 
 #include "BufferObject.hpp"
 #include "Shader.hpp"
-
+#include "CudaComputeManager.hpp"
+#include "particle.cuh"
+#include <cuda_runtime.h>
 #include <random>
 
 constexpr size_t MAX_PARTICLE_NBS = 500000;
-
-struct Particle {
-    glm::vec4 position;
-    glm::vec4 velocity;
-    glm::vec4 color;
-    float lifespan;
-    float _pad1, pad2, pad3;
-};
 
 class ParticleSystem {
 public:
@@ -26,6 +20,6 @@ public:
 
 private:
     size_t mMaxParticleNb;
-    std::unique_ptr<ComputeShader> mComputeShader;
     std::unique_ptr<BufferObject> mSSBO;
+    std::unique_ptr<CudaComputeManager> mCudaComputeManager;
 };

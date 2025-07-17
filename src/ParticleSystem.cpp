@@ -5,9 +5,7 @@ std::mt19937 gen(rd());
 std::uniform_real_distribution<float> cube_dis(-0.5, 0.5);
 std::uniform_real_distribution<float> col_dis(0.0, 1.0);
 
-ParticleSystem::ParticleSystem(size_t maxParticleNb) : mMaxParticleNb(maxParticleNb) {\
-    mComputeShader = std::make_unique<ComputeShader>("particles");
-
+ParticleSystem::ParticleSystem(size_t maxParticleNb) : mMaxParticleNb(maxParticleNb) {
     mSSBO = std::make_unique<BufferObject>(GL_SHADER_STORAGE_BUFFER);
     mSSBO->InitializeData(nullptr, sizeof(Particle) * mMaxParticleNb);
     mSSBO->BindIndexedTarget(0);
@@ -30,23 +28,31 @@ ParticleSystem::ParticleSystem(size_t maxParticleNb) : mMaxParticleNb(maxParticl
         const float g = col_dis(gen);
         const float b = col_dis(gen);
 
-        particles[i].position = glm::vec4(x, y, z, 1.0f);
-        particles[i].velocity = glm::vec4(x * 2, y * 2, z * 2, 0.0f);
-        particles[i].color = glm::vec4(r, g, b, 1.0f);
+        particles[i].position = make_float4(x, y, z, 1.0f);
+        particles[i].velocity = make_float4(x * 2, y * 2, z * 2, 0.0f);
+        particles[i].color = make_float4(r, g, b, 1.0f);
         particles[i].lifespan = 100.0;
     }
     mSSBO->UnmapBuffer();
+
+    mCudaComputeManager = std::make_unique<CudaComputeManager>();
+    mCudaComputeManager->RegisterBuffer(mSSBO->GetID());
 }
 
 void ParticleSystem::Emit() {}
 
 void ParticleSystem::Update() {
-    mComputeShader->Use();
+    void *cudaResourcePtr = mCudaComputeManager->MapBuffer();
+    Particle* particles = static_cast<Particle*>(cudaResourcePtr);
 
-    GLuint workGroupSize = 256;
-    GLuint numGroups = (mMaxParticleNb + workGroupSize - 1) / workGroupSize;
-    //std::cout << "num groups: " << numGroups << std::endl;
-    mComputeShader->Compute(numGroups, 1, 1);
+    LaunchUpdateParticles(particles, mMaxParticleNb);
 
-    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    // cudaError_t err = cudaGetLastError();
+    // if (err != cudaSuccess) {
+    //     std::cerr << "[CUDA] Kernel launch failed: " << cudaGetErrorString(err) << std::endl;
+    // }
+
+    // cudaDeviceSynchronize();
+
+    mCudaComputeManager->Unmap();
 }
