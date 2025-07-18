@@ -1,7 +1,8 @@
 #pragma once
 
-#include "gl_common.hpp"
 #include <cuda_gl_interop.h>
+
+#include "gl_common.hpp"
 
 class CudaComputeManager {
 public:

@@ -1,11 +1,13 @@
 #pragma once
 
+#include <random>
+#include <cuda_runtime.h>
+
 #include "BufferObject.hpp"
 #include "Shader.hpp"
 #include "CudaComputeManager.hpp"
+
 #include "particle.cuh"
-#include <cuda_runtime.h>
-#include <random>
 
 constexpr size_t MAX_PARTICLE_NBS = 3000000;
 

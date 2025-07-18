@@ -1,13 +1,16 @@
 #pragma once
 
-#include "gl_common.hpp"
-#include "utils.hpp"
 #include <array>
+#include <iostream>
+
+#include "gl_common.hpp"
 
 class Camera;
 
 class InputHandler {
 public:
+    InputHandler(Camera* camera) : mCamera(camera) {}
+
     void onKey(int key, int scancode, int action, int mods);
     void onMouseButton(GLFWwindow* window, int button, int action, int mods);
     void onCursorPos(double xpos, double ypos);

@@ -23,6 +23,12 @@ Window::Window(const int width, const int height, const char* title) {
 
     int version = gladLoadGL();
     if (!version) throw std::runtime_error("Failed to initialize OpenGL context with GLAD");
+
+    // Disable VSync
+    glfwSwapInterval(0);
+
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "GLSL version: "   << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 }
 
 void Window::PollEvents() {

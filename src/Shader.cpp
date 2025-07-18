@@ -4,8 +4,8 @@ const std::string SHADER_PATH = "assets/shaders/";
 const std::string KERNEL_PATH = "assets/kernels/";
 
 Shader::Shader(const std::string& name) {
-    const std::string vertexStr = loadFileSource(SHADER_PATH + name + "/vertex.glsl");
-    const std::string fragmentStr = loadFileSource(SHADER_PATH + name + "/fragment.glsl");
+    const std::string vertexStr = LoadShaderSource(SHADER_PATH + name + "/vertex.glsl");
+    const std::string fragmentStr = LoadShaderSource(SHADER_PATH + name + "/fragment.glsl");
 
     if (vertexStr.empty() || fragmentStr.empty()) {
         throw std::runtime_error("Error: Empty shader source");
@@ -46,28 +46,6 @@ GLint Shader::GetUniformLocation(const std::string& name) {
     return location;
 }
 
-ComputeShader::ComputeShader(const std::string& name) : Shader() {
-    const std::string shaderStr = loadFileSource(SHADER_PATH + name + "/compute.glsl");
-
-    if (shaderStr.empty()) {
-        throw std::runtime_error("Error: Empty shader source");
-    }
-
-    const char *shaderSrc = shaderStr.c_str();
-
-    GLuint shader = glCreateShader(GL_COMPUTE_SHADER);
-    glShaderSource(shader, 1, &shaderSrc, NULL);
-    glCompileShader(shader);
-    CheckCompileError(shader, "SHADER");
-
-    mID = glCreateProgram();
-    glAttachShader(mID, shader);
-    glLinkProgram(mID);
-    CheckCompileError(mID, "PROGRAM");
-
-    glDeleteShader(shader);
-}
-
 void Shader::CheckCompileError(GLuint id, const std::string& type) {
     int success;
     char infoLog[1024];
@@ -87,4 +65,19 @@ void Shader::CheckCompileError(GLuint id, const std::string& type) {
             exit(EXIT_FAILURE);
         }
     }
+}
+
+std::string Shader::LoadShaderSource(const std::string &path) {
+    std::ifstream file;
+    std::stringstream ss;
+
+    file.open(path);
+    if (!file.is_open()) {
+        std::cout << "Cannot open the shader file." << std::endl;
+        return "";
+    }
+    ss << file.rdbuf();
+    file.close();
+    return ss.str();
+
 }

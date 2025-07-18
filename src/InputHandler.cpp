@@ -39,7 +39,6 @@ void InputHandler::onMouseButton(GLFWwindow* window, int button, int action, int
     } else if (action == GLFW_RELEASE) {
         mIsMouseDown = false;
     }
-    // std::cout << "mouse button " << button << " " << action << " " << mods << std::endl;
 }
 
 void InputHandler::onCursorPos(double xpos, double ypos) {

@@ -36,5 +36,5 @@ __host__ void LaunchUpdateParticles(Particle* particles, GravityCenter gravityCe
     // if (err != cudaSuccess) {
     //     std::cerr << "[CUDA] Kernel launch failed: " << cudaGetErrorString(err) << std::endl;
     // }
-    cudaDeviceSynchronize();
+    // cudaDeviceSynchronize();
 }

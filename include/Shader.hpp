@@ -1,7 +1,10 @@
 #pragma once
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
 #include "gl_common.hpp"
-#include "utils.hpp"
 
 class Shader {
 public:
@@ -16,6 +19,7 @@ public:
     void SetUniform(const std::string& name, const glm::vec3& vec) { glUniform3fv(GetUniformLocation(name), 1, glm::value_ptr(vec)); }
     void SetUniform(const std::string& name, const glm::mat4& mat) { glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat)); }
 
+    static std::string LoadShaderSource(const std::string &path);
     static void CheckCompileError(GLuint id, const std::string& type);
 
 protected:
@@ -25,11 +29,4 @@ protected:
 
     GLuint mID;
     std::unordered_map<std::string, GLint> mUniformLocations;
-};
-
-class ComputeShader : public Shader {
-public:
-    ComputeShader(const std::string& name);
-    
-    void Compute(size_t x, size_t y, size_t z) { glDispatchCompute(x, y, z); }
 };
