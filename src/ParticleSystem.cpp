@@ -37,6 +37,9 @@ ParticleSystem::ParticleSystem(size_t maxParticleNb) : mMaxParticleNb(maxParticl
 
     mCudaComputeManager = std::make_unique<CudaComputeManager>();
     mCudaComputeManager->RegisterBuffer(mSSBO->GetID());
+
+    mGravityCenter.position = make_float3(0.0f, 0.0f, 0.0f);
+    mGravityCenter.strength = 0.6f;
 }
 
 void ParticleSystem::Emit() {}
@@ -45,7 +48,7 @@ void ParticleSystem::Update() {
     void *cudaResourcePtr = mCudaComputeManager->MapBuffer();
     Particle* particles = static_cast<Particle*>(cudaResourcePtr);
 
-    LaunchUpdateParticles(particles, mMaxParticleNb);
+    LaunchUpdateParticles(particles, mGravityCenter, mMaxParticleNb);
 
     // cudaError_t err = cudaGetLastError();
     // if (err != cudaSuccess) {

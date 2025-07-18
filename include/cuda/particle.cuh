@@ -8,5 +8,9 @@ struct Particle {
     float _pad1, _pad2, _pad3;
 };
 
-__global__ void UpdateParticles(Particle* particles, int count);
-void LaunchUpdateParticles(Particle* d_particles, int count);
+struct GravityCenter {
+    float3 position;
+    float strength;
+};
+
+__host__ void LaunchUpdateParticles(Particle* particles, GravityCenter gravityCenter, int count);

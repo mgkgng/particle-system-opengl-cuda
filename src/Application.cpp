@@ -53,5 +53,4 @@ void Application::Run() {
         mWindow.SwapBuffer();
         mWindow.PollEvents();
     }
-    return 0;
 }

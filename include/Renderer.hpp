@@ -16,7 +16,6 @@ public:
     void Draw(size_t particleNb);
 
     void SetViewport(const int x, const int y, const int width, const int height) { glViewport(x, y, width, height); }
-    void SetFramebufferSize(const int width, const int height);
 private:
     int mFramebufferWidth, mFramebufferHeight;
 
@@ -24,4 +23,5 @@ private:
     std::unique_ptr<Shader> mShader;
 
     Camera* mCamera;
+
 };

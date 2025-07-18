@@ -22,4 +22,5 @@ private:
     size_t mMaxParticleNb;
     std::unique_ptr<BufferObject> mSSBO;
     std::unique_ptr<CudaComputeManager> mCudaComputeManager;
+    GravityCenter mGravityCenter;
 };
