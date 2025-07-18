@@ -4,6 +4,7 @@
 #include "InputHandler.hpp"
 #include "ParticleSystem.hpp"
 #include "Camera.hpp"
+#include "Timer.hpp"
 
 #include <cuda_runtime.h>
 
@@ -25,4 +26,6 @@ private:
     Renderer mRenderer;
     InputHandler mInputHandler;
     ParticleSystem mParticleSystem;
+    Timer mTimer;
+    
 };

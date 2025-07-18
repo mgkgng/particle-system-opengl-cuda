@@ -7,7 +7,7 @@
 #include <cuda_runtime.h>
 #include <random>
 
-constexpr size_t MAX_PARTICLE_NBS = 500000;
+constexpr size_t MAX_PARTICLE_NBS = 3000000;
 
 class ParticleSystem {
 public:

@@ -36,3 +36,9 @@ void Window::PollEvents() {
         glfwSetWindowShouldClose(mWindow, GLFW_TRUE);
     }
 }
+
+void Window::UpdateWindowTitleWithFPS(float fps) {
+    std::ostringstream title;
+    title << "Particle System - FPS: " << std::fixed << std::setprecision(2) << fps;
+    glfwSetWindowTitle(mWindow, title.str().c_str());
+}

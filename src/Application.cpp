@@ -44,7 +44,13 @@ bool Application::InitCUDA() {
 }
 
 void Application::Run() {
+    mTimer.On();
     while (!mWindow.ShouldClose()) {
+        if (mTimer.IsFPSUpdated()) {
+            mWindow.UpdateWindowTitleWithFPS(mTimer.GetFPS());
+            mTimer.SetFPSUpdated(false);
+        }
+
         mParticleSystem.Update();
 
         mRenderer.Clear();
@@ -52,5 +58,7 @@ void Application::Run() {
 
         mWindow.SwapBuffer();
         mWindow.PollEvents();
+
+        mTimer.Update();
     }
 }

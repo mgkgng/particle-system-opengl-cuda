@@ -3,6 +3,7 @@
 #include "gl_common.hpp"
 #include "utils.hpp"
 #include "InputHandler.hpp"
+#include <iomanip>
 
 class InputHandler;
 
@@ -12,6 +13,7 @@ public:
     bool ShouldClose() { return glfwWindowShouldClose(mWindow); }
     GLFWwindow* GetWindow() const { return mWindow; }
     void SetWindowUserPointer(void* ptr) const { glfwSetWindowUserPointer(mWindow, ptr); }
+    void UpdateWindowTitleWithFPS(float fps);
 
     void SwapBuffer() { glfwSwapBuffers(mWindow); }
     void PollEvents();
