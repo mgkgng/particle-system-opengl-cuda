@@ -36,12 +36,22 @@ void InputHandler::onKey(int key, int scancode, int action, int mods) {
     }
 }
 
-void InputHandler::onMouseButton(int button, int action, int mods) {
+void InputHandler::onMouseButton(GLFWwindow* window, int button, int action, int mods) {
+    if (button != GLFW_MOUSE_BUTTON_LEFT) return;
+
+    if (action == GLFW_PRESS) {
+        mIsMouseDown = true;
+        glfwGetCursorPos(window, &mPrevCursorPos[0], &mPrevCursorPos[1]);
+    } else if (action == GLFW_RELEASE) {
+        mIsMouseDown = false;
+    }
     // std::cout << "mouse button " << button << " " << action << " " << mods << std::endl;
 }
 
 void InputHandler::onCursorPos(double xpos, double ypos) {
-    // std::cout << "curos pos " << xpos << " " << ypos << std::endl;
+    if (!mIsMouseDown) return;
+
+    mCamera->Rotate(static_cast<float>(xpos - mPrevCursorPos[0]), static_cast<float>(ypos - mPrevCursorPos[1]));
 }
 
 void InputHandler::onScroll(double xoffset, double yoffset) {
@@ -57,7 +67,7 @@ void InputHandler::keyCallback(GLFWwindow* window, int key, int scancode, int ac
 
 void InputHandler::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     auto* input = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-    if (input) input->onMouseButton(button, action, mods);
+    if (input) input->onMouseButton(window, button, action, mods);
 }
 
 void InputHandler::cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
@@ -73,7 +83,3 @@ void InputHandler::scrollCallback(GLFWwindow* window, double xoffset, double yof
     auto* input = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
     if (input) input->onScroll(xoffset, yoffset); 
 }
-
-
-
-

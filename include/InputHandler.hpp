@@ -2,13 +2,14 @@
 
 #include "gl_common.hpp"
 #include "utils.hpp"
+#include <array>
 
 class Camera;
 
 class InputHandler {
 public:
     void onKey(int key, int scancode, int action, int mods);
-    void onMouseButton(int button, int action, int mods);
+    void onMouseButton(GLFWwindow* window, int button, int action, int mods);
     void onCursorPos(double xpos, double ypos);
     void onScroll(double xoffset, double yoffset);
 
@@ -21,5 +22,7 @@ public:
     void SetCamera(Camera* camera) { mCamera = camera; }
 
 private:
-    Camera* mCamera;
+    Camera* mCamera = nullptr;
+    bool mIsMouseDown = false;
+    std::array<double, 2> mPrevCursorPos;
 };

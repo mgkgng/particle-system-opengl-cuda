@@ -4,7 +4,7 @@
 
 class Camera {
 public:
-    static constexpr float kRotSensitivity = 0.25f;
+    static constexpr float kRotSensitivity = 0.05f;
     static constexpr float kZoomSpeed = 1.05f;
     static constexpr float kMinDistanceToOrigin = 0.1f;
     static constexpr float kMaxDistanceToOrigin = 100.0f;
