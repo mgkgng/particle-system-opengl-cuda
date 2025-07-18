@@ -17,23 +17,17 @@ void InputHandler::onKey(int key, int scancode, int action, int mods) {
         case GLFW_KEY_D:
             std::cout << "D ";
             break;
+        case GLFW_KEY_SPACE:
+            if (action == GLFW_PRESS)
+                mComputeOn = !mComputeOn;
+            break;
         default:
             return;
     }
 
-    switch (action) {
-        case GLFW_PRESS:
-            std::cout << "PRESS" << std::endl;
-            break;
-        case GLFW_REPEAT:
-            std::cout << "REPEAT" << std::endl;
-            break;
-        case GLFW_RELEASE:
-            std::cout << "RELEASE" << std::endl;
-            break;
-        default:
-            return;
-    }
+    //     case GLFW_PRESS:
+    //     case GLFW_REPEAT:
+    //     case GLFW_RELEASE:
 }
 
 void InputHandler::onMouseButton(GLFWwindow* window, int button, int action, int mods) {

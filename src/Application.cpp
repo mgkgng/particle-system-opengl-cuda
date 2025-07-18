@@ -51,7 +51,9 @@ void Application::Run() {
             mTimer.SetFPSUpdated(false);
         }
 
-        mParticleSystem.Update();
+        if (mInputHandler.isComputeOn()) {
+            mParticleSystem.Update();
+        }
 
         mRenderer.Clear();
         mRenderer.Draw(mParticleSystem.GetCount());

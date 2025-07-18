@@ -5,10 +5,6 @@ Window::Window(const int width, const int height, const char* title) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     mWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);

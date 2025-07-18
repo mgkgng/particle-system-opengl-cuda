@@ -21,8 +21,12 @@ public:
 
     void SetCamera(Camera* camera) { mCamera = camera; }
 
+    bool isComputeOn() const { return mComputeOn; }
+
 private:
     Camera* mCamera = nullptr;
     bool mIsMouseDown = false;
     std::array<double, 2> mPrevCursorPos;
+
+    bool mComputeOn = true;
 };
