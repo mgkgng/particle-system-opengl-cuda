@@ -5,20 +5,26 @@
 #include "Renderer.hpp"
 #include "InputHandler.hpp"
 #include "ParticleSystem.hpp"
+#include "ProgramConfig.hpp"
 #include "Camera.hpp"
 #include "Timer.hpp"
 
 class Application {
 
 public:
-Application(const int width, const int height, const char *title);
-~Application() { glfwTerminate(); }
+    static constexpr int kWindowWidth = 1280;
+    static constexpr int kWindowHeight = 720;
+    static constexpr float kAspectRatio = static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight);
+    static constexpr std::string_view kWindowTitle = "Particle System";
 
-Application(const Application& other) = delete;
-Application& operator=(const Application& other) = delete;
+    Application(ProgramConfig programConfig);
+    ~Application() { glfwTerminate(); }
 
-bool InitCUDA();
-void Run();
+    Application(const Application& other) = delete;
+    Application& operator=(const Application& other) = delete;
+
+    bool InitCUDA();
+    void Run();
 
 private:
     Window mWindow;

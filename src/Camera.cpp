@@ -1,8 +1,9 @@
 #include "Camera.hpp"
+#include "Application.hpp"
 
-Camera::Camera(float fov, float aspectRatio, float nearPlane, float farPlane) {
+Camera::Camera() {
     mViewMatrix = glm::lookAt(mPosition, glm::vec3(0.0f), mUp);
-    mProjMatrix = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
+    mProjMatrix = glm::perspective(glm::radians(kFOV), Application::kAspectRatio, kNearPlane, kFarPlane);
 }
 
 void Camera::Translate(float deltaTime) {

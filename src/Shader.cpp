@@ -1,11 +1,8 @@
 #include "Shader.hpp"
 
-const std::string SHADER_PATH = "assets/shaders/";
-const std::string KERNEL_PATH = "assets/kernels/";
-
 Shader::Shader(const std::string& name) {
-    const std::string vertexStr = LoadShaderSource(SHADER_PATH + name + "/vertex.glsl");
-    const std::string fragmentStr = LoadShaderSource(SHADER_PATH + name + "/fragment.glsl");
+    const std::string vertexStr = LoadShaderSource(std::string(kShaderPath) + name + "/vertex.glsl");
+    const std::string fragmentStr = LoadShaderSource(std::string(kShaderPath) + name + "/fragment.glsl");
 
     if (vertexStr.empty() || fragmentStr.empty()) {
         throw std::runtime_error("Error: Empty shader source");

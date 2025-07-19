@@ -5,7 +5,8 @@ struct Particle {
     float4 velocity;
     float4 color;
     float lifespan;
-    float _pad1, _pad2, _pad3;
+    float size;
+    float _pad1, _pad2;
 };
 
 struct GravityCenter {

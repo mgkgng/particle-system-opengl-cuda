@@ -1,9 +1,7 @@
 #include "Application.hpp"
 
-Application::Application(const int width, const int height, const char* title)
- : mWindow(width, height, title)
- , mParticleSystem(MAX_PARTICLE_NBS)
- , mCamera(45.0f, static_cast<float>(width) / static_cast<float>(height), 1.0f, 100.0f)
+Application::Application(ProgramConfig programConfig)
+ : mParticleSystem(MAX_PARTICLE_NBS)
  , mRenderer(mWindow.GetWindow(), &mCamera)
  , mInputHandler(&mCamera) { mWindow.SetWindowUserPointer(&mInputHandler); }
 

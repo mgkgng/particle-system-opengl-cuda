@@ -1,11 +1,12 @@
+#include "ProgramConfig.hpp"
 #include "Application.hpp"
-#include "VertexArrayObject.hpp"
 
-int main() {
-    Application app(800, 800, "Particle Systems");
+int main(int argc, char **argv) {
+    ProgramConfig programConfig;
+    if (!programConfig.ParseArg(argc, argv)) return EXIT_FAILURE;
 
-    if (!app.InitCUDA())
-        return EXIT_FAILURE;
+    Application app(programConfig);
+    if (!app.InitCUDA()) return EXIT_FAILURE;
 
     app.Run();
 }

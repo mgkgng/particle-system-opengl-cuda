@@ -23,6 +23,8 @@ public:
     static void CheckCompileError(GLuint id, const std::string& type);
 
 protected:
+    static constexpr std::string_view kShaderPath = "shaders/";
+
     Shader() = default;
 
     GLint GetUniformLocation(const std::string& name);

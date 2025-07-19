@@ -1,13 +1,14 @@
 #include "Window.hpp"
+#include "Application.hpp"
 
-Window::Window(const int width, const int height, const char* title) {
+Window::Window() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    mWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
+    mWindow = glfwCreateWindow(Application::kWindowWidth, Application::kWindowHeight, Application::kWindowTitle.data(), nullptr, nullptr);
     if (!mWindow) {
         glfwTerminate();
         throw std::runtime_error("Failed to create windowd with GLFW.");
