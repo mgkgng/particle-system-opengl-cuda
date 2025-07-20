@@ -54,9 +54,9 @@ void ParticleSystem::InitializeCube(Particle** particles, size_t count) {
         const float g = color_dis(gen);
         const float b = color_dis(gen);
 
-        (*particles)[i].position = make_float4(x, y, z, 1.0f);
-        (*particles)[i].initialPosition = make_float4(x, y, z, 1.0f);
-        (*particles)[i].velocity = make_float4(x * 2, y * 2, z * 2, 0.0f);
+        (*particles)[i].position = make_float3(x, y, z);
+        (*particles)[i].initialPosition = make_float3(x, y, z);
+        (*particles)[i].velocity = make_float3(x * 2, y * 2, z * 2);
         (*particles)[i].color = make_float4(r, g, b, 1.0f);
     }
 }
@@ -77,9 +77,9 @@ void ParticleSystem::InitializeSphere(Particle** particles, size_t count) {
         const float g = color_dis(gen);
         const float b = color_dis(gen);
 
-        (*particles)[i].position = make_float4(x, y, z, 1.0f);
-        (*particles)[i].initialPosition = make_float4(x, y, z, 1.0f);
-        (*particles)[i].velocity = make_float4(x * 2, y * 2, z * 2, 0.0f);
+        (*particles)[i].position = make_float3(x, y, z);
+        (*particles)[i].initialPosition = make_float3(x, y, z);
+        (*particles)[i].velocity = make_float3(x * 2, y * 2, z * 2);
         (*particles)[i].color = make_float4(r, g, b, 1.0f);
     }
 }
