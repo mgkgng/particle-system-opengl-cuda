@@ -6,11 +6,6 @@ Camera::Camera() {
     mProjMatrix = glm::perspective(glm::radians(kFOV), Application::kAspectRatio, kNearPlane, kFarPlane);
 }
 
-void Camera::Translate(float deltaTime) {
-
-    UpdateView();
-}
-
 void Camera::Rotate(float deltaYaw, float deltaPitch) {
     mYaw += deltaYaw * Camera::kRotSensitivity;
     mPitch += deltaPitch * Camera::kRotSensitivity;

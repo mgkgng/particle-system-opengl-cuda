@@ -41,7 +41,6 @@ file(GLOB CUDA_HEADERS "include/cuda/*.cuh")
 add_executable(${EXECUTABLE_NAME}
     ${SRC_FILES}
     ${GLAD_SRC}
-    ${CUDA_HEADERS}
 )
 
 # Include directories

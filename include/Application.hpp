@@ -16,6 +16,7 @@ public:
     static constexpr int kWindowHeight = 720;
     static constexpr float kAspectRatio = static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight);
     static constexpr std::string_view kWindowTitle = "Particle System";
+    static constexpr size_t kParticleNbs = 3000000;
 
     Application(ProgramConfig programConfig);
     ~Application() { glfwTerminate(); }
@@ -29,9 +30,8 @@ public:
 private:
     Window mWindow;
     Camera mCamera;
+    Timer mTimer;
+    ParticleSystem mParticleSystem;
     Renderer mRenderer;
     InputHandler mInputHandler;
-    ParticleSystem mParticleSystem;
-    Timer mTimer;
-    
 };

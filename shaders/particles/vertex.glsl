@@ -2,10 +2,11 @@
 
 struct Particle {
     vec4 position;
+    vec4 initialPosition;
     vec4 velocity;
     vec4 color;
     float lifespan;
-    float _pad1, _pad2, _pad3;
+    float _pad1, _pad2;
 };
 
 layout(std430, binding = 0) buffer ParticleData {

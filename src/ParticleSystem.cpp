@@ -1,38 +1,21 @@
 #include "ParticleSystem.hpp"
+#include "Application.hpp"
 
 std::random_device rd;
 std::mt19937 gen(rd());
 std::uniform_real_distribution<float> cube_dis(-0.5, 0.5);
-std::uniform_real_distribution<float> col_dis(0.0, 1.0);
+std::uniform_real_distribution<float> sphere_dis(0.0, 1.0);
+std::uniform_real_distribution<float> color_dis(0.0, 1.0);
 
-ParticleSystem::ParticleSystem(size_t maxParticleNb) : mMaxParticleNb(maxParticleNb) {
+
+ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, GravityMode gravityMode, Timer *timer) : mParticlesNb(particlesNb), mTimer(timer) {
     mSSBO = std::make_unique<BufferObject>(GL_SHADER_STORAGE_BUFFER);
-    mSSBO->InitializeData(nullptr, sizeof(Particle) * mMaxParticleNb);
+    mSSBO->InitializeData(nullptr, sizeof(Particle) * mParticlesNb);
     mSSBO->BindIndexedTarget(0);
 
-#ifdef DEBUG_ON
-    GLint maxWorkGroupSize[3];
-    for (size_t i = 0; i < 3; ++i) {
-        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, i, &maxWorkGroupSize[i]);
-        std::cout << "max work group size for index " << i << ": " << maxWorkGroupSize[i] << std::endl;
-    }
-#endif
-
     Particle* particles = static_cast<Particle*>(mSSBO->MapBuffer(GL_WRITE_ONLY));
-    for (size_t i = 0; i < mMaxParticleNb; i++) {
-        const float x = cube_dis(gen);
-        const float y = cube_dis(gen);
-        const float z = cube_dis(gen);
-
-        const float r = col_dis(gen);
-        const float g = col_dis(gen);
-        const float b = col_dis(gen);
-
-        particles[i].position = make_float4(x, y, z, 1.0f);
-        particles[i].velocity = make_float4(x * 2, y * 2, z * 2, 0.0f);
-        particles[i].color = make_float4(r, g, b, 1.0f);
-        particles[i].lifespan = 100.0;
-    }
+    if (shapeMode == ShapeMode::Cube) InitializeCube(&particles, mParticlesNb);
+    else InitializeSphere(&particles, mParticlesNb);
     mSSBO->UnmapBuffer();
 
     mCudaComputeManager = std::make_unique<CudaComputeManager>();
@@ -40,6 +23,7 @@ ParticleSystem::ParticleSystem(size_t maxParticleNb) : mMaxParticleNb(maxParticl
 
     mGravityCenter.position = make_float3(0.0f, 0.0f, 0.0f);
     mGravityCenter.strength = 0.6f;
+    mGravityCenter.mode = gravityMode;
 }
 
 void ParticleSystem::Emit() {}
@@ -48,7 +32,7 @@ void ParticleSystem::Update() {
     void *cudaResourcePtr = mCudaComputeManager->MapBuffer();
     Particle* particles = static_cast<Particle*>(cudaResourcePtr);
 
-    LaunchUpdateParticles(particles, mGravityCenter, mMaxParticleNb);
+    LaunchUpdateParticles(particles, mGravityCenter, mParticlesNb, mTimer->GetElapsedTime());
 
     // cudaError_t err = cudaGetLastError();
     // if (err != cudaSuccess) {
@@ -58,4 +42,44 @@ void ParticleSystem::Update() {
     // cudaDeviceSynchronize();
 
     mCudaComputeManager->Unmap();
+}
+
+void ParticleSystem::InitializeCube(Particle** particles, size_t count) {
+    for (size_t i = 0; i < count; i++) {
+        const float x = cube_dis(gen);
+        const float y = cube_dis(gen);
+        const float z = cube_dis(gen);
+
+        const float r = color_dis(gen);
+        const float g = color_dis(gen);
+        const float b = color_dis(gen);
+
+        (*particles)[i].position = make_float4(x, y, z, 1.0f);
+        (*particles)[i].initialPosition = make_float4(x, y, z, 1.0f);
+        (*particles)[i].velocity = make_float4(x * 2, y * 2, z * 2, 0.0f);
+        (*particles)[i].color = make_float4(r, g, b, 1.0f);
+    }
+}
+
+void ParticleSystem::InitializeSphere(Particle** particles, size_t count) {
+    constexpr float maximumRadius = 0.3f;
+
+    for (size_t i = 0; i < count; i++) {
+        const float theta = sphere_dis(gen) * M_PI * 2.0;
+        const float phi = acos(2.0 * sphere_dis(gen) - 1.0); 
+        const float radialDistance = maximumRadius * cbrtf(sphere_dis(gen));
+
+        const float x = radialDistance * sin(phi) * cos(theta);
+        const float y = radialDistance * sin(phi) * sin(theta);
+        const float z = radialDistance * cos(phi);
+
+        const float r = color_dis(gen);
+        const float g = color_dis(gen);
+        const float b = color_dis(gen);
+
+        (*particles)[i].position = make_float4(x, y, z, 1.0f);
+        (*particles)[i].initialPosition = make_float4(x, y, z, 1.0f);
+        (*particles)[i].velocity = make_float4(x * 2, y * 2, z * 2, 0.0f);
+        (*particles)[i].color = make_float4(r, g, b, 1.0f);
+    }
 }

@@ -1,7 +1,7 @@
 #include "Application.hpp"
 
 Application::Application(ProgramConfig programConfig)
- : mParticleSystem(MAX_PARTICLE_NBS)
+ : mParticleSystem(kParticleNbs, programConfig.mShapeMode, programConfig.mGravityMode, &mTimer)
  , mRenderer(mWindow.GetWindow(), &mCamera)
  , mInputHandler(&mCamera) { mWindow.SetWindowUserPointer(&mInputHandler); }
 

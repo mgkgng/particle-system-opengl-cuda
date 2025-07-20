@@ -15,11 +15,10 @@ public:
 
     static constexpr float kInitialPosX = 0.0f;
     static constexpr float kInitialPosY = 0.0f;
-    static constexpr float kInitialPosZ = -15.0f;
+    static constexpr float kInitialPosZ = -5.0f;
 
     Camera();
 
-    void Translate(float deltaTime);
     void Rotate(float yaw, float pitch);
     void Zoom(const float dz);
 

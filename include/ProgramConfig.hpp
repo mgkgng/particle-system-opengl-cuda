@@ -7,7 +7,6 @@ enum class ShapeMode { Cube, Sphere };
 enum class GravityMode { Off, Static, Follow };
 
 class ProgramConfig {
-
 public:
     bool ParseArg(int argc, char **argv);
 

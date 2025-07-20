@@ -30,6 +30,13 @@ Window::Window() {
 
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
     std::cout << "GLSL version: "   << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
+    GLint maxWorkGroupSize[3];
+    for (size_t i = 0; i < 3; ++i) {
+        glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, i, &maxWorkGroupSize[i]);
+    }
+    std::cout << "Max work group size : (" << maxWorkGroupSize[0] << ", " << maxWorkGroupSize[1] << ", " << maxWorkGroupSize[2] << ")" << std::endl;
+
 }
 
 void Window::PollEvents() {
