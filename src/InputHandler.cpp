@@ -1,21 +1,37 @@
 #include "InputHandler.hpp"
 #include "Camera.hpp"
+#include "Application.hpp"
 
 void InputHandler::onKey(int key, int scancode, int action, int mods) {
     if (!mCamera) return;
 
     switch (key) {
-        case GLFW_KEY_W:
-            std::cout << "W ";
+        case GLFW_KEY_B:
+            if (action == GLFW_PRESS) {
+                if (mProgramConfig->mGravityCenter.mode == GravityMode::Static || mProgramConfig->mGravityCenter.mode == GravityMode::Follow) {
+                    mProgramConfig->mGravityCenter.mode = GravityMode::Off;
+                    mParticleSystem->UpdateInitialPosition();
+                    mTimer->Reset();
+                } else if (mProgramConfig->mGravityFollow) {
+                    mProgramConfig->mGravityCenter.mode = GravityMode::Follow;
+                } else {
+                    mProgramConfig->mGravityCenter.mode = GravityMode::Static;
+                }
+            }
             break;
-        case GLFW_KEY_A:
-            std::cout << "A ";
+        case GLFW_KEY_C:
+            // cursor on/off
             break;
-        case GLFW_KEY_S:
-            std::cout << "S ";
+        case GLFW_KEY_R:
+            if (action != GLFW_PRESS || mProgramConfig->mGravityCenter.mode != GravityMode::Static) return;
+            
+            double mouseX, mouseY;
+            glfwGetCursorPos(mWindow, &mouseX, &mouseY);
+
+            mProgramConfig->mGravityCenter.position = ScreenToWorld(mouseX, mouseY, Application::kWindowWidth, Application::kWindowHeight, mCamera->GetViewMatrix(), mCamera->GetProjMatrix(), mCamera->GetPosition());
+            std::cout << "let's see x: " << mProgramConfig->mGravityCenter.position.x << " y: " << mProgramConfig->mGravityCenter.position.y << " z: " << mProgramConfig->mGravityCenter.position.z << std::endl;
             break;
-        case GLFW_KEY_D:
-            std::cout << "D ";
+        case GLFW_KEY_H:
             break;
         case GLFW_KEY_SPACE:
             if (action == GLFW_PRESS)
@@ -24,10 +40,6 @@ void InputHandler::onKey(int key, int scancode, int action, int mods) {
         default:
             return;
     }
-
-    //     case GLFW_PRESS:
-    //     case GLFW_REPEAT:
-    //     case GLFW_RELEASE:
 }
 
 void InputHandler::onMouseButton(GLFWwindow* window, int button, int action, int mods) {
@@ -75,4 +87,23 @@ void InputHandler::windowCloseCallback(GLFWwindow* window) {
 void InputHandler::scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     auto* input = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
     if (input) input->onScroll(xoffset, yoffset); 
+}
+
+float3 InputHandler::ScreenToWorld(const double mouseX, const double mouseY,
+                                   const int screenWidth, const int screenHeight,
+                                   const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
+                                   const glm::vec3& cameraPos) {
+    float x = (2.0f * mouseX) / screenWidth - 1.0f;
+    float y = 1.0f - (2.0f * mouseY) / screenHeight;
+    glm::vec4 rayClip = glm::vec4(x, y, -1.0f, 1.0f);
+    
+    glm::vec4 rayEye = glm::inverse(projectionMatrix) * rayClip;
+    rayEye = glm::vec4(rayEye.x, rayEye.y, -1.0f, 0.0f);
+
+    glm::vec3 rayWorld = glm::normalize(glm::vec3(glm::inverse(viewMatrix) * rayEye));
+
+    float t = -cameraPos.z / rayWorld.z;
+    auto res = cameraPos + t * rayWorld;
+
+    return make_float3(res.x, res.y, 0.0f);
 }

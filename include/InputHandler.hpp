@@ -4,12 +4,15 @@
 #include <iostream>
 
 #include "gl_common.hpp"
+#include "ProgramConfig.hpp"
+#include "ParticleSystem.hpp"
 
 class Camera;
 
 class InputHandler {
 public:
-    InputHandler(Camera* camera) : mCamera(camera) {}
+    InputHandler(GLFWwindow* window, Camera* camera, ProgramConfig* programConfig, ParticleSystem* particleSystem, Timer* timer) 
+        : mWindow(window), mCamera(camera), mProgramConfig(programConfig), mParticleSystem(particleSystem), mTimer(timer) {}
 
     void onKey(int key, int scancode, int action, int mods);
     void onMouseButton(GLFWwindow* window, int button, int action, int mods);
@@ -27,7 +30,17 @@ public:
     bool isComputeOn() const { return mComputeOn; }
 
 private:
+    static float3 ScreenToWorld(const double mouseX, const double mouseY,
+                                const int screenWidth, const int screenHeight,
+                                const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
+                                const glm::vec3& cameraPos);
+
+    GLFWwindow* mWindow = nullptr;
     Camera* mCamera = nullptr;
+    ProgramConfig* mProgramConfig = nullptr;
+    ParticleSystem* mParticleSystem = nullptr;
+    Timer* mTimer = nullptr;
+
     bool mIsMouseDown = false;
     std::array<double, 2> mPrevCursorPos;
 

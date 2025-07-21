@@ -1,9 +1,12 @@
 #include "Application.hpp"
 
-Application::Application(ProgramConfig programConfig)
- : mParticleSystem(kParticleNbs, programConfig.mShapeMode, programConfig.mGravityMode, &mTimer)
- , mRenderer(mWindow.GetWindow(), &mCamera)
- , mInputHandler(&mCamera) { mWindow.SetWindowUserPointer(&mInputHandler); }
+Application::Application(ProgramConfig& programConfig)
+    : mProgramConfig(programConfig)
+    , mParticleSystem(programConfig.mParticleCount, programConfig.mShapeMode, &mTimer)
+    , mRenderer(mWindow.GetWindow(), &mCamera)
+    , mInputHandler(mWindow.GetWindow(), &mCamera, &mProgramConfig, &mParticleSystem, &mTimer) { 
+        mWindow.SetWindowUserPointer(&mInputHandler);
+    }
 
 bool Application::InitCUDA() {
     int deviceCount = 0;
@@ -44,7 +47,7 @@ void Application::Run() {
         }
 
         if (mInputHandler.isComputeOn()) {
-            mParticleSystem.Update();
+            mParticleSystem.Update(mProgramConfig.mGravityCenter);
         }
 
         mRenderer.Clear();

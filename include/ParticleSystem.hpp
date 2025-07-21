@@ -1,7 +1,6 @@
 #pragma once
 
 #include <random>
-#include <cuda_runtime.h>
 
 #include "BufferObject.hpp"
 #include "Shader.hpp"
@@ -15,10 +14,11 @@
 
 class ParticleSystem {
 public:
-    ParticleSystem(size_t particlesNb, ShapeMode shapeMode, GravityMode gravityMode, Timer* timer);
+    ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Timer* timer);
 
     void Emit();
-    void Update();
+    void Update(const GravityCenter& gravityCenter);
+    void UpdateInitialPosition();
 
     size_t GetCount() const { return mParticlesNb; }
 
@@ -29,6 +29,5 @@ private:
     size_t mParticlesNb;
     std::unique_ptr<BufferObject> mSSBO;
     std::unique_ptr<CudaComputeManager> mCudaComputeManager;
-    GravityCenter mGravityCenter;
     Timer* mTimer;
 };

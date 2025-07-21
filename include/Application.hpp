@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cuda_runtime.h>
-
 #include "Renderer.hpp"
 #include "InputHandler.hpp"
 #include "ParticleSystem.hpp"
@@ -16,9 +14,8 @@ public:
     static constexpr int kWindowHeight = 720;
     static constexpr float kAspectRatio = static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight);
     static constexpr std::string_view kWindowTitle = "Particle System";
-    static constexpr size_t kParticleNbs = 3000000;
 
-    Application(ProgramConfig programConfig);
+    Application(ProgramConfig& programConfig);
     ~Application() { glfwTerminate(); }
 
     Application(const Application& other) = delete;
@@ -28,6 +25,7 @@ public:
     void Run();
 
 private:
+    ProgramConfig mProgramConfig;
     Window mWindow;
     Camera mCamera;
     Timer mTimer;

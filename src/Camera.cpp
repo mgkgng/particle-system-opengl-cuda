@@ -20,10 +20,6 @@ void Camera::Zoom(float dz) {
     UpdateView();
 }
 
-glm::mat4 Camera::GetViewProjMatrix() const {
-    return mProjMatrix * mViewMatrix;
-}
-
 void Camera::UpdateView() {
     float yawRad = glm::radians(mYaw);
     float pitchRad = glm::radians(mPitch);

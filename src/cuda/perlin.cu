@@ -2,8 +2,6 @@
 
 #include "perlin.cuh"
 
-#define NUM_NOISE_OCTAVES 5
-
 __device__ inline float dot(const float3& a, const float3& b) {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }

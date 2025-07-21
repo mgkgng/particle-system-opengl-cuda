@@ -10,6 +10,7 @@ public:
 
     void On();
     void Update();
+    void Reset() { mStartTime = std::chrono::high_resolution_clock::now(); }
 
     float GetFPS() const { return mFPS; }
     float GetElapsedTime() const { return mElapsedTime; }

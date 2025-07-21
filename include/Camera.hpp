@@ -22,7 +22,11 @@ public:
     void Rotate(float yaw, float pitch);
     void Zoom(const float dz);
 
-    glm::mat4 GetViewProjMatrix() const;
+    glm::mat4 GetViewProjMatrix() const { return mProjMatrix * mViewMatrix; }
+    const glm::mat4& GetViewMatrix() const { return mViewMatrix; }
+    const glm::mat4& GetProjMatrix() const { return mProjMatrix; }
+
+    const glm::vec3& GetPosition() const { return mPosition; }
 
     bool IsUpdated() const { return mIsUpdated; }
     void SetUpdated(bool updated) { mIsUpdated = updated; }
@@ -40,24 +44,4 @@ private:
     float mDistance = glm::distance(mPosition, mUp);
 
     bool mIsUpdated = true;
-};
-
-class CameraController {
-public:
-    CameraController(Camera* camera);
-    
-    void Update(float deltaTime);
-    void OnKeyInput(int key, int action);
-    void SetMovementSpeed(float maxSpeed);
-    void SetAcceleration(float a);
-
-private:
-    Camera *mCamera;
-
-    glm::vec3 mVelocity;
-    glm::vec3 mAcceleration;
-    glm::vec3 mTargetAcceleration;
-
-    float mMaxSpeed;
-
 };

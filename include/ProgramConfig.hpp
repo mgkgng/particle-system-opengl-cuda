@@ -3,8 +3,7 @@
 #include <string>
 #include <iostream>
 
-enum class ShapeMode { Cube, Sphere };
-enum class GravityMode { Off, Static, Follow };
+#include "particle.cuh"
 
 class ProgramConfig {
 public:
@@ -12,7 +11,10 @@ public:
 
 private:
     friend class Application;
+    friend class InputHandler;
 
     ShapeMode mShapeMode = ShapeMode::Sphere;
-    GravityMode mGravityMode = GravityMode::Off;
+    GravityCenter mGravityCenter = { make_float3(0.0f, 0.0f, 0.0f), 0.06f, GravityMode::Off };
+    bool mGravityFollow = false;
+    size_t mParticleCount = 1000000;
 };

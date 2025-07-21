@@ -8,7 +8,7 @@ std::uniform_real_distribution<float> sphere_dis(0.0, 1.0);
 std::uniform_real_distribution<float> color_dis(0.0, 1.0);
 
 
-ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, GravityMode gravityMode, Timer *timer) : mParticlesNb(particlesNb), mTimer(timer) {
+ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Timer *timer) : mParticlesNb(particlesNb), mTimer(timer) {
     mSSBO = std::make_unique<BufferObject>(GL_SHADER_STORAGE_BUFFER);
     mSSBO->InitializeData(nullptr, sizeof(Particle) * mParticlesNb);
     mSSBO->BindIndexedTarget(0);
@@ -20,27 +20,23 @@ ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, GravityM
 
     mCudaComputeManager = std::make_unique<CudaComputeManager>();
     mCudaComputeManager->RegisterBuffer(mSSBO->GetID());
-
-    mGravityCenter.position = make_float3(0.0f, 0.0f, 0.0f);
-    mGravityCenter.strength = 0.6f;
-    mGravityCenter.mode = gravityMode;
 }
 
 void ParticleSystem::Emit() {}
 
-void ParticleSystem::Update() {
+void ParticleSystem::Update(const GravityCenter& gravityCenter) {
     void *cudaResourcePtr = mCudaComputeManager->MapBuffer();
     Particle* particles = static_cast<Particle*>(cudaResourcePtr);
 
-    LaunchUpdateParticles(particles, mGravityCenter, mParticlesNb, mTimer->GetElapsedTime());
+    cudaUpdateParticles(particles, gravityCenter, mParticlesNb, mTimer->GetElapsedTime());
+    mCudaComputeManager->Unmap();
+}
 
-    // cudaError_t err = cudaGetLastError();
-    // if (err != cudaSuccess) {
-    //     std::cerr << "[CUDA] Kernel launch failed: " << cudaGetErrorString(err) << std::endl;
-    // }
+void ParticleSystem::UpdateInitialPosition() {
+    void *cudaResourcePtr = mCudaComputeManager->MapBuffer();
+    Particle* particles = static_cast<Particle*>(cudaResourcePtr);
 
-    // cudaDeviceSynchronize();
-
+    cudaUpdateInitialPosition(particles, mParticlesNb);
     mCudaComputeManager->Unmap();
 }
 

@@ -45,12 +45,25 @@ __global__ void UpdateParticles(Particle* particles, GravityCenter gravityCenter
     } else if (gravityCenter.mode == GravityMode::Off) {
         p.position = ApplyPerlin(p.initialPosition, elapsedTime);
     }
-
 }
 
-__host__ void LaunchUpdateParticles(Particle* particles, GravityCenter gravityCenter, int count, float elapsedTime) {
+__global__ void UpdateInitialPosition(Particle* particles, int count) {
+    int id = blockIdx.x * blockDim.x + threadIdx.x;
+    if (id >= count) return;
+
+    Particle& p = particles[id];
+    p.initialPosition = p.position;
+}
+
+__host__ void cudaUpdateParticles(Particle* particles, GravityCenter gravityCenter, int count, float elapsedTime) {
     int threadsPerBlock = 256;
     int blocks = (count + threadsPerBlock - 1) / threadsPerBlock;
     UpdateParticles<<<blocks, threadsPerBlock>>>(particles, gravityCenter, count, elapsedTime);
     // cudaDeviceSynchronize();
+}
+
+__host__ void cudaUpdateInitialPosition(Particle* particles, int count) {
+    int threadsPerBlock = 256;
+    int blocks = (count + threadsPerBlock - 1) / threadsPerBlock;
+    UpdateInitialPosition<<<blocks, threadsPerBlock>>>(particles, count);
 }
