@@ -11,7 +11,7 @@ class Camera;
 
 class InputHandler {
 public:
-    InputHandler(GLFWwindow* window, Camera* camera, ProgramConfig* programConfig, ParticleSystem* particleSystem, Timer* timer) 
+    InputHandler(Window* window, Camera* camera, ProgramConfig* programConfig, ParticleSystem* particleSystem, Timer* timer) 
         : mWindow(window), mCamera(camera), mProgramConfig(programConfig), mParticleSystem(particleSystem), mTimer(timer) {}
 
     void onKey(int key, int scancode, int action, int mods);
@@ -27,15 +27,13 @@ public:
 
     void SetCamera(Camera* camera) { mCamera = camera; }
 
-    bool isComputeOn() const { return mComputeOn; }
-
 private:
     static float3 ScreenToWorld(const double mouseX, const double mouseY,
                                 const int screenWidth, const int screenHeight,
                                 const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
                                 const glm::vec3& cameraPos);
 
-    GLFWwindow* mWindow = nullptr;
+    Window* mWindow = nullptr;
     Camera* mCamera = nullptr;
     ProgramConfig* mProgramConfig = nullptr;
     ParticleSystem* mParticleSystem = nullptr;
@@ -44,5 +42,4 @@ private:
     bool mIsMouseDown = false;
     std::array<double, 2> mPrevCursorPos;
 
-    bool mComputeOn = true;
 };

@@ -52,3 +52,19 @@ void Window::UpdateWindowTitleWithFPS(float fps) {
     title << "Particle System - FPS: " << std::fixed << std::setprecision(2) << fps;
     glfwSetWindowTitle(mWindow, title.str().c_str());
 }
+
+std::array<double, 2> Window::GetCurrentCursorPos() {
+    double mouseX, mouseY;
+    glfwGetCursorPos(mWindow, &mouseX, &mouseY);
+    return { mouseX, mouseY };
+}
+
+void Window::ChangeCursorVisibility() {
+    if (mIsCursorVisible) {
+        glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        mIsCursorVisible = false;
+    } else {
+        glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        mIsCursorVisible = true;
+    }
+}

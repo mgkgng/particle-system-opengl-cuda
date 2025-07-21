@@ -2,9 +2,9 @@
 
 Application::Application(ProgramConfig& programConfig)
     : mProgramConfig(programConfig)
-    , mParticleSystem(programConfig.mParticleCount, programConfig.mShapeMode, &mTimer)
+    , mParticleSystem(programConfig.mParticleCount, programConfig.mShapeMode, &mWindow, &mTimer)
     , mRenderer(mWindow.GetWindow(), &mCamera)
-    , mInputHandler(mWindow.GetWindow(), &mCamera, &mProgramConfig, &mParticleSystem, &mTimer) { 
+    , mInputHandler(&mWindow, &mCamera, &mProgramConfig, &mParticleSystem, &mTimer) { 
         mWindow.SetWindowUserPointer(&mInputHandler);
     }
 
@@ -46,9 +46,7 @@ void Application::Run() {
             mTimer.SetFPSUpdated(false);
         }
 
-        if (mInputHandler.isComputeOn()) {
-            mParticleSystem.Update(mProgramConfig.mGravityCenter);
-        }
+        mParticleSystem.Update(mProgramConfig.mGravityCenter);
 
         mRenderer.Clear();
         mRenderer.Draw(mParticleSystem.GetCount());

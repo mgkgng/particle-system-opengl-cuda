@@ -3,39 +3,34 @@
 #include "Application.hpp"
 
 void InputHandler::onKey(int key, int scancode, int action, int mods) {
-    if (!mCamera) return;
+    if (!mCamera || action != GLFW_PRESS) return;
 
     switch (key) {
         case GLFW_KEY_B:
-            if (action == GLFW_PRESS) {
-                if (mProgramConfig->mGravityCenter.mode == GravityMode::Static || mProgramConfig->mGravityCenter.mode == GravityMode::Follow) {
-                    mProgramConfig->mGravityCenter.mode = GravityMode::Off;
-                    mParticleSystem->UpdateInitialPosition();
-                    mTimer->Reset();
-                } else if (mProgramConfig->mGravityFollow) {
-                    mProgramConfig->mGravityCenter.mode = GravityMode::Follow;
-                } else {
-                    mProgramConfig->mGravityCenter.mode = GravityMode::Static;
-                }
+            if (mProgramConfig->mGravityCenter.mode == GravityMode::Static || mProgramConfig->mGravityCenter.mode == GravityMode::Follow) {
+                mProgramConfig->mGravityCenter.mode = GravityMode::Off;
+                mParticleSystem->UpdateInitialPosition();
+                mTimer->Reset();
+            } else if (mProgramConfig->mGravityFollow) {
+                mProgramConfig->mGravityCenter.mode = GravityMode::Follow;
+            } else {
+                mProgramConfig->mGravityCenter.mode = GravityMode::Static;
             }
             break;
         case GLFW_KEY_C:
-            // cursor on/off
+            mWindow->ChangeCursorVisibility();
             break;
         case GLFW_KEY_R:
-            if (action != GLFW_PRESS || mProgramConfig->mGravityCenter.mode != GravityMode::Static) return;
+            if (mProgramConfig->mGravityCenter.mode != GravityMode::Static) return;
             
-            double mouseX, mouseY;
-            glfwGetCursorPos(mWindow, &mouseX, &mouseY);
-
-            mProgramConfig->mGravityCenter.position = ScreenToWorld(mouseX, mouseY, Application::kWindowWidth, Application::kWindowHeight, mCamera->GetViewMatrix(), mCamera->GetProjMatrix(), mCamera->GetPosition());
+            auto cursorPos = mWindow->GetCurrentCursorPos();
+            mProgramConfig->mGravityCenter.position = ScreenToWorld(cursorPos[0], cursorPos[1], Application::kWindowWidth, Application::kWindowHeight, mCamera->GetViewMatrix(), mCamera->GetProjMatrix(), mCamera->GetPosition());
             std::cout << "let's see x: " << mProgramConfig->mGravityCenter.position.x << " y: " << mProgramConfig->mGravityCenter.position.y << " z: " << mProgramConfig->mGravityCenter.position.z << std::endl;
             break;
         case GLFW_KEY_H:
             break;
         case GLFW_KEY_SPACE:
-            if (action == GLFW_PRESS)
-                mComputeOn = !mComputeOn;
+            mParticleSystem->SwitchComputeOn();
             break;
         default:
             return;
@@ -47,16 +42,19 @@ void InputHandler::onMouseButton(GLFWwindow* window, int button, int action, int
 
     if (action == GLFW_PRESS) {
         mIsMouseDown = true;
-        glfwGetCursorPos(window, &mPrevCursorPos[0], &mPrevCursorPos[1]);
+        mPrevCursorPos = mWindow->GetCurrentCursorPos();
     } else if (action == GLFW_RELEASE) {
         mIsMouseDown = false;
     }
 }
 
 void InputHandler::onCursorPos(double xpos, double ypos) {
-    if (!mIsMouseDown) return;
-
-    mCamera->Rotate(static_cast<float>(xpos - mPrevCursorPos[0]), static_cast<float>(ypos - mPrevCursorPos[1]));
+    if (mIsMouseDown) {
+        mCamera->Rotate(static_cast<float>(xpos - mPrevCursorPos[0]), static_cast<float>(ypos - mPrevCursorPos[1]));
+    } else if (mProgramConfig->mGravityCenter.mode == GravityMode::Follow) {
+        auto cursorPos = mWindow->GetCurrentCursorPos();
+        mProgramConfig->mGravityCenter.position = ScreenToWorld(cursorPos[0], cursorPos[1], Application::kWindowWidth, Application::kWindowHeight, mCamera->GetViewMatrix(), mCamera->GetProjMatrix(), mCamera->GetPosition());
+    }
 }
 
 void InputHandler::onScroll(double xoffset, double yoffset) {

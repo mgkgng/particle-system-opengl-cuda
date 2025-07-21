@@ -13,15 +13,18 @@ class InputHandler;
 class Window {
 public:
     Window();
-    
-    bool ShouldClose() { return glfwWindowShouldClose(mWindow); }
-    GLFWwindow* GetWindow() const { return mWindow; }
-    void SetWindowUserPointer(void* ptr) const { glfwSetWindowUserPointer(mWindow, ptr); }
-    void UpdateWindowTitleWithFPS(float fps);
 
+    bool ShouldClose() { return glfwWindowShouldClose(mWindow); }
     void SwapBuffer() { glfwSwapBuffers(mWindow); }
     void PollEvents();
 
+    GLFWwindow* GetWindow() const { return mWindow; }
+    void SetWindowUserPointer(void* ptr) const { glfwSetWindowUserPointer(mWindow, ptr); }
+    void UpdateWindowTitleWithFPS(float fps);
+    std::array<double, 2> GetCurrentCursorPos();
+    void ChangeCursorVisibility();
+
 private:
-    GLFWwindow* mWindow = nullptr; 
+    GLFWwindow* mWindow = nullptr;
+    bool mIsCursorVisible = true; 
 };

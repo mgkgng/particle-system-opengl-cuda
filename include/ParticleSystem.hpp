@@ -12,15 +12,18 @@
 
 # define M_PI 3.14159265358979323846
 
+class Window;
+
 class ParticleSystem {
 public:
-    ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Timer* timer);
+    ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window* window, Timer* timer);
 
-    void Emit();
     void Update(const GravityCenter& gravityCenter);
     void UpdateInitialPosition();
 
     size_t GetCount() const { return mParticlesNb; }
+
+    void SwitchComputeOn() { mComputeOn != mComputeOn; }
 
 private:
     static void InitializeCube(Particle** particles, size_t count);
@@ -29,5 +32,8 @@ private:
     size_t mParticlesNb;
     std::unique_ptr<BufferObject> mSSBO;
     std::unique_ptr<CudaComputeManager> mCudaComputeManager;
+    Window* mWindow;
     Timer* mTimer;
+
+    bool mComputeOn = false;
 };

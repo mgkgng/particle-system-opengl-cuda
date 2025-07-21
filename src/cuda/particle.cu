@@ -34,16 +34,15 @@ __global__ void UpdateParticles(Particle* particles, GravityCenter gravityCenter
 
     Particle& p = particles[id];
 
-    if (gravityCenter.mode == GravityMode::Static) {
+    if (gravityCenter.mode == GravityMode::Off) {
+        p.position = ApplyPerlin(p.initialPosition, elapsedTime);
+    } else {
         p.velocity += ApplyGravity(p.position, gravityCenter);
 
         const float dt = 0.001f;
         p.position.x += p.velocity.x * dt;
         p.position.y += p.velocity.y * dt;
         p.position.z += p.velocity.z * dt;
-
-    } else if (gravityCenter.mode == GravityMode::Off) {
-        p.position = ApplyPerlin(p.initialPosition, elapsedTime);
     }
 }
 

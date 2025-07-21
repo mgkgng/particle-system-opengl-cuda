@@ -8,7 +8,7 @@ std::uniform_real_distribution<float> sphere_dis(0.0, 1.0);
 std::uniform_real_distribution<float> color_dis(0.0, 1.0);
 
 
-ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Timer *timer) : mParticlesNb(particlesNb), mTimer(timer) {
+ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window *window, Timer *timer) : mParticlesNb(particlesNb), mWindow(window), mTimer(timer) {
     mSSBO = std::make_unique<BufferObject>(GL_SHADER_STORAGE_BUFFER);
     mSSBO->InitializeData(nullptr, sizeof(Particle) * mParticlesNb);
     mSSBO->BindIndexedTarget(0);
@@ -22,9 +22,9 @@ ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Timer *t
     mCudaComputeManager->RegisterBuffer(mSSBO->GetID());
 }
 
-void ParticleSystem::Emit() {}
-
 void ParticleSystem::Update(const GravityCenter& gravityCenter) {
+    if (!mComputeOn) return;
+    
     void *cudaResourcePtr = mCudaComputeManager->MapBuffer();
     Particle* particles = static_cast<Particle*>(cudaResourcePtr);
 
