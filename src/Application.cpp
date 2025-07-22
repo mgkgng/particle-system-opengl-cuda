@@ -39,14 +39,16 @@ bool Application::InitCUDA() {
 }
 
 void Application::Run() {
-    mTimer.On();
     while (!mWindow.ShouldClose()) {
         if (mTimer.IsFPSUpdated()) {
             mWindow.UpdateWindowTitleWithFPS(mTimer.GetFPS());
             mTimer.SetFPSUpdated(false);
         }
 
-        mParticleSystem.Update(mProgramConfig.mGravityCenter);
+        if (mParticleSystem.IsComputeOn()) {
+            mParticleSystem.Update(mProgramConfig.mGravityCenter);
+            mTimer.Update();
+        }
 
         mRenderer.Clear();
         mRenderer.Draw(mParticleSystem.GetCount());
@@ -54,6 +56,5 @@ void Application::Run() {
         mWindow.SwapBuffer();
         mWindow.PollEvents();
 
-        mTimer.Update();
     }
 }

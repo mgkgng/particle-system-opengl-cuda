@@ -1,6 +1,6 @@
 #pragma once
 
-#include "operator.cuh"
+#include "float3_utils.cuh"
 
 #define NUM_NOISE_OCTAVES 5
 

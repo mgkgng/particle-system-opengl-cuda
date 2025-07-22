@@ -20,10 +20,12 @@ public:
 
     void Update(const GravityCenter& gravityCenter);
     void UpdateInitialPosition();
+    void Restart(ShapeMode shapeMode);
 
     size_t GetCount() const { return mParticlesNb; }
 
-    void SwitchComputeOn() { mComputeOn != mComputeOn; }
+    void SwitchComputeOn() { mComputeOn = !mComputeOn; }
+    bool IsComputeOn() const { return mComputeOn; }
 
 private:
     static void InitializeCube(Particle** particles, size_t count);
@@ -35,5 +37,5 @@ private:
     Window* mWindow;
     Timer* mTimer;
 
-    bool mComputeOn = false;
+    bool mComputeOn = true;
 };

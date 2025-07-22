@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+#include <array>
 
 #include "gl_common.hpp"
 #include "InputHandler.hpp"

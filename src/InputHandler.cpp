@@ -21,11 +21,14 @@ void InputHandler::onKey(int key, int scancode, int action, int mods) {
             mWindow->ChangeCursorVisibility();
             break;
         case GLFW_KEY_R:
+            mParticleSystem->Restart(mProgramConfig->mShapeMode);
+            mTimer->Reset();
+            break;
+        case GLFW_KEY_P:
             if (mProgramConfig->mGravityCenter.mode != GravityMode::Static) return;
             
             auto cursorPos = mWindow->GetCurrentCursorPos();
             mProgramConfig->mGravityCenter.position = ScreenToWorld(cursorPos[0], cursorPos[1], Application::kWindowWidth, Application::kWindowHeight, mCamera->GetViewMatrix(), mCamera->GetProjMatrix(), mCamera->GetPosition());
-            std::cout << "let's see x: " << mProgramConfig->mGravityCenter.position.x << " y: " << mProgramConfig->mGravityCenter.position.y << " z: " << mProgramConfig->mGravityCenter.position.z << std::endl;
             break;
         case GLFW_KEY_H:
             break;
@@ -37,7 +40,7 @@ void InputHandler::onKey(int key, int scancode, int action, int mods) {
     }
 }
 
-void InputHandler::onMouseButton(GLFWwindow* window, int button, int action, int mods) {
+void InputHandler::onMouseButton(int button, int action, int mods) {
     if (button != GLFW_MOUSE_BUTTON_LEFT) return;
 
     if (action == GLFW_PRESS) {
@@ -70,7 +73,7 @@ void InputHandler::keyCallback(GLFWwindow* window, int key, int scancode, int ac
 
 void InputHandler::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     auto* input = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-    if (input) input->onMouseButton(window, button, action, mods);
+    if (input) input->onMouseButton(button, action, mods);
 }
 
 void InputHandler::cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {

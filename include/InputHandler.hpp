@@ -15,7 +15,7 @@ public:
         : mWindow(window), mCamera(camera), mProgramConfig(programConfig), mParticleSystem(particleSystem), mTimer(timer) {}
 
     void onKey(int key, int scancode, int action, int mods);
-    void onMouseButton(GLFWwindow* window, int button, int action, int mods);
+    void onMouseButton(int button, int action, int mods);
     void onCursorPos(double xpos, double ypos);
     void onScroll(double xoffset, double yoffset);
 

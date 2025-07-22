@@ -13,18 +13,20 @@ ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window *
     mSSBO->InitializeData(nullptr, sizeof(Particle) * mParticlesNb);
     mSSBO->BindIndexedTarget(0);
 
-    Particle* particles = static_cast<Particle*>(mSSBO->MapBuffer(GL_WRITE_ONLY));
-    if (shapeMode == ShapeMode::Cube) InitializeCube(&particles, mParticlesNb);
-    else InitializeSphere(&particles, mParticlesNb);
-    mSSBO->UnmapBuffer();
+    Restart(shapeMode);
 
     mCudaComputeManager = std::make_unique<CudaComputeManager>();
     mCudaComputeManager->RegisterBuffer(mSSBO->GetID());
 }
 
+void ParticleSystem::Restart(ShapeMode shapeMode) {
+    Particle* particles = static_cast<Particle*>(mSSBO->MapBuffer(GL_WRITE_ONLY));
+    if (shapeMode == ShapeMode::Cube) InitializeCube(&particles, mParticlesNb);
+    else InitializeSphere(&particles, mParticlesNb);
+    mSSBO->UnmapBuffer();
+}
+
 void ParticleSystem::Update(const GravityCenter& gravityCenter) {
-    if (!mComputeOn) return;
-    
     void *cudaResourcePtr = mCudaComputeManager->MapBuffer();
     Particle* particles = static_cast<Particle*>(cudaResourcePtr);
 

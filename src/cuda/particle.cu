@@ -39,7 +39,7 @@ __global__ void UpdateParticles(Particle* particles, GravityCenter gravityCenter
     } else {
         p.velocity += ApplyGravity(p.position, gravityCenter);
 
-        const float dt = 0.001f;
+        const float dt = 0.0001f;
         p.position.x += p.velocity.x * dt;
         p.position.y += p.velocity.y * dt;
         p.position.z += p.velocity.z * dt;

@@ -6,7 +6,7 @@ class Timer {
 public:
     using time_t = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
-    Timer() {}
+    Timer() = default;
 
     void On();
     void Update();
@@ -25,5 +25,5 @@ private:
     float mFPS = 0.0f;
     float mElapsedTime;
     bool mFPSUpdated = false;
-
+    bool mIsOn = false;
 };
