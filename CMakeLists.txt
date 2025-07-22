@@ -37,10 +37,18 @@ list(APPEND SRC_FILES ${CUDA_SOURCES})
 
 file(GLOB CUDA_HEADERS "include/cuda/*.cuh")
 
+# ImGui sources
+file(GLOB IMGUI_SRC
+    externals/imgui/*.cpp
+    externals/imgui/backends/imgui_impl_glfw.cpp
+    externals/imgui/backends/imgui_impl_opengl3.cpp
+)
+
 # Define the executable
 add_executable(${EXECUTABLE_NAME}
     ${SRC_FILES}
     ${GLAD_SRC}
+    ${IMGUI_SRC}
 )
 
 # Include directories
@@ -50,6 +58,12 @@ target_include_directories(${EXECUTABLE_NAME} PRIVATE
     src/glad
     externals/glfw/include
     externals/glm
+    externals/imgui
+    externals/imgui/backends
+)
+
+target_compile_definitions(${EXECUTABLE_NAME} PRIVATE
+    IMGUI_IMPL_OPENGL_LOADER_GLAD
 )
 
 # Platform-specific linking

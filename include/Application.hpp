@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Window.hpp"
 #include "Renderer.hpp"
 #include "InputHandler.hpp"
 #include "ParticleSystem.hpp"
 #include "ProgramConfig.hpp"
 #include "Camera.hpp"
 #include "Timer.hpp"
+#include "ImGuiLayer.hpp"
 
 class Application {
 
@@ -27,6 +29,7 @@ public:
 private:
     ProgramConfig mProgramConfig;
     Window mWindow;
+    ImGuiLayer mImGuiLayer;
     Camera mCamera;
     Timer mTimer;
     ParticleSystem mParticleSystem;

@@ -28,4 +28,5 @@ void main() {
     Particle p = particles[gl_VertexID];
     vColor = p.color;
     gl_Position = uProjView * vec4(p.position, 1.0f);
+    gl_PointSize = 2.0f;
 }

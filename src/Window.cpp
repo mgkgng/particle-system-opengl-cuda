@@ -22,11 +22,14 @@ Window::Window() {
     glfwSetCursorPosCallback(mWindow, InputHandler::cursorPosCallback);
     glfwSetScrollCallback(mWindow, InputHandler::scrollCallback);
 
+    glfwSwapInterval(0); // Disable VSync
+
     int version = gladLoadGL();
     if (!version) throw std::runtime_error("Failed to initialize OpenGL context with GLAD");
 
-    // Disable VSync
-    glfwSwapInterval(0);
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
     std::cout << "GLSL version: "   << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;

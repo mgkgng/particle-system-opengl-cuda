@@ -1,7 +1,8 @@
 #include "Application.hpp"
 
 Application::Application(ProgramConfig& programConfig)
-    : mProgramConfig(programConfig)
+    : mImGuiLayer(mWindow.GetWindow())
+    , mProgramConfig(programConfig)
     , mParticleSystem(programConfig.mParticleCount, programConfig.mShapeMode, &mWindow, &mTimer)
     , mRenderer(mWindow.GetWindow(), &mCamera)
     , mInputHandler(&mWindow, &mCamera, &mProgramConfig, &mParticleSystem, &mTimer) { 
