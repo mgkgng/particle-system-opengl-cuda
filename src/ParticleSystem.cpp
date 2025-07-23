@@ -1,14 +1,8 @@
 #include "ParticleSystem.hpp"
 #include "Application.hpp"
 
-std::random_device rd;
-std::mt19937 gen(rd());
-std::uniform_real_distribution<float> cube_dis(-0.5, 0.5);
-std::uniform_real_distribution<float> sphere_dis(0.0, 1.0);
-std::uniform_real_distribution<float> color_dis(0.0, 1.0);
-
-
-ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window *window, Timer *timer) : mParticlesNb(particlesNb), mWindow(window), mTimer(timer) {
+ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window *window, Timer *timer)
+    : mParticlesNb(particlesNb), mWindow(window), mTimer(timer), mColor(std::string(kDefaultColor)) {
     mSSBO = std::make_unique<BufferObject>(GL_SHADER_STORAGE_BUFFER);
     mSSBO->InitializeData(nullptr, sizeof(Particle) * mParticlesNb);
     mSSBO->BindIndexedTarget(0);
@@ -21,8 +15,8 @@ ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window *
 
 void ParticleSystem::Restart(ShapeMode shapeMode) {
     Particle* particles = static_cast<Particle*>(mSSBO->MapBuffer(GL_WRITE_ONLY));
-    if (shapeMode == ShapeMode::Cube) InitializeCube(&particles, mParticlesNb);
-    else InitializeSphere(&particles, mParticlesNb);
+    if (shapeMode == ShapeMode::Cube) InitializeCube(&particles, mParticlesNb, mColor);
+    else InitializeSphere(&particles, mParticlesNb, mColor);
     mSSBO->UnmapBuffer();
 }
 
@@ -42,42 +36,32 @@ void ParticleSystem::UpdateInitialPosition() {
     mCudaComputeManager->Unmap();
 }
 
-void ParticleSystem::InitializeCube(Particle** particles, size_t count) {
+void ParticleSystem::InitializeCube(Particle** particles, size_t count, Color& color) {
     for (size_t i = 0; i < count; i++) {
-        const float x = cube_dis(gen);
-        const float y = cube_dis(gen);
-        const float z = cube_dis(gen);
-
-        const float r = color_dis(gen);
-        const float g = color_dis(gen);
-        const float b = color_dis(gen);
+        const float x = Random::RandomCube();
+        const float y = Random::RandomCube();
+        const float z = Random::RandomCube();
 
         (*particles)[i].position = make_float3(x, y, z);
         (*particles)[i].initialPosition = make_float3(x, y, z);
-        (*particles)[i].velocity = make_float3(x * 2, y * 2, z * 2);
-        (*particles)[i].color = make_float4(r, g, b, 1.0f);
+        (*particles)[i].color = color.Perturb();
     }
 }
 
-void ParticleSystem::InitializeSphere(Particle** particles, size_t count) {
+void ParticleSystem::InitializeSphere(Particle** particles, size_t count, Color& color) {
     constexpr float maximumRadius = 0.3f;
 
     for (size_t i = 0; i < count; i++) {
-        const float theta = sphere_dis(gen) * M_PI * 2.0;
-        const float phi = acos(2.0 * sphere_dis(gen) - 1.0); 
-        const float radialDistance = maximumRadius * cbrtf(sphere_dis(gen));
+        const float theta = Random::RandomSphere() * M_PI * 2.0;
+        const float phi = acos(2.0 * Random::RandomSphere() - 1.0); 
+        const float radialDistance = maximumRadius * cbrtf(Random::RandomSphere());
 
         const float x = radialDistance * sin(phi) * cos(theta);
         const float y = radialDistance * sin(phi) * sin(theta);
         const float z = radialDistance * cos(phi);
 
-        const float r = color_dis(gen);
-        const float g = color_dis(gen);
-        const float b = color_dis(gen);
-
         (*particles)[i].position = make_float3(x, y, z);
         (*particles)[i].initialPosition = make_float3(x, y, z);
-        (*particles)[i].velocity = make_float3(x * 2, y * 2, z * 2);
-        (*particles)[i].color = make_float4(r, g, b, 1.0f);
+        (*particles)[i].color = color.Perturb();
     }
 }

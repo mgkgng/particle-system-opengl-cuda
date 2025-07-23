@@ -7,6 +7,7 @@
 #include "CudaComputeManager.hpp"
 #include "ProgramConfig.hpp"
 #include "Timer.hpp"
+#include "Color.hpp"
 
 #include "particle.cuh"
 
@@ -16,6 +17,8 @@ class Window;
 
 class ParticleSystem {
 public:
+    static constexpr std::string_view kDefaultColor = "#E60007";
+
     ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window* window, Timer* timer);
 
     void Update(const GravityCenter& gravityCenter);
@@ -28,14 +31,15 @@ public:
     bool IsComputeOn() const { return mComputeOn; }
 
 private:
-    static void InitializeCube(Particle** particles, size_t count);
-    static void InitializeSphere(Particle** particles, size_t count);
+    static void InitializeCube(Particle** particles, size_t count, Color& color);
+    static void InitializeSphere(Particle** particles, size_t count, Color& color);
 
     size_t mParticlesNb;
     std::unique_ptr<BufferObject> mSSBO;
     std::unique_ptr<CudaComputeManager> mCudaComputeManager;
     Window* mWindow;
     Timer* mTimer;
+    Color mColor;
 
     bool mComputeOn = true;
 };
