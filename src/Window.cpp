@@ -21,8 +21,10 @@ Window::Window() {
     glfwSetMouseButtonCallback(mWindow, InputHandler::mouseButtonCallback);
     glfwSetCursorPosCallback(mWindow, InputHandler::cursorPosCallback);
     glfwSetScrollCallback(mWindow, InputHandler::scrollCallback);
+    glfwSetCursorEnterCallback(mWindow, InputHandler::cursorEnterCallback);
 
     glfwSwapInterval(0); // Disable VSync
+    glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     int version = gladLoadGL();
     if (!version) throw std::runtime_error("Failed to initialize OpenGL context with GLAD");
@@ -62,12 +64,10 @@ std::array<double, 2> Window::GetCurrentCursorPos() {
     return { mouseX, mouseY };
 }
 
-void Window::ChangeCursorVisibility() {
-    if (mIsCursorVisible) {
-        glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-        mIsCursorVisible = false;
-    } else {
-        glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        mIsCursorVisible = true;
-    }
+std::array<float, 2> Window::GetCurrentCursorPosNDC() {
+    auto cursorPos = GetCurrentCursorPos();
+    return {
+        2.0f * static_cast<float>(cursorPos[0]) / static_cast<float>(Application::kWindowWidth) - 1.0f,
+        1.0f - 2.0f * static_cast<float>(cursorPos[1]) / static_cast<float>(Application::kWindowHeight) 
+    };
 }

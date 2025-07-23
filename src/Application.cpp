@@ -4,7 +4,7 @@ Application::Application(ProgramConfig& programConfig)
     : mImGuiLayer(mWindow.GetWindow())
     , mProgramConfig(programConfig)
     , mParticleSystem(programConfig.mParticleCount, programConfig.mShapeMode, &mWindow, &mTimer)
-    , mRenderer(mWindow.GetWindow(), &mCamera)
+    , mRenderer(&mWindow, &mCamera)
     , mInputHandler(&mWindow, &mCamera, &mProgramConfig, &mParticleSystem, &mTimer) { 
         mWindow.SetWindowUserPointer(&mInputHandler);
     }

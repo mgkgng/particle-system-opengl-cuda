@@ -1,11 +1,12 @@
 #include "Renderer.hpp"
 
-Renderer::Renderer(GLFWwindow* window, Camera* camera) : mCamera(camera) {
+Renderer::Renderer(Window* window, Camera* camera) : mWindow(window), mCamera(camera) {
     std::cout << "Renderer Initialization start." << std::endl;
-    mShader = std::make_unique<Shader>("particles");
+    mParticleShader = std::make_unique<Shader>("particles");
+    mCursorShader = std::make_unique<Shader>("cursor");
     mVAO = std::make_unique<VertexArrayObject>();
 
-    glfwGetFramebufferSize(window, &mFramebufferWidth, &mFramebufferHeight);
+    glfwGetFramebufferSize(window->GetWindow(), &mFramebufferWidth, &mFramebufferHeight);
     glViewport(0, 0, mFramebufferWidth, mFramebufferHeight);
 }
 
@@ -15,13 +16,20 @@ void Renderer::Clear() {
 }
 
 void Renderer::Draw(size_t particleNb) {
-    mShader->Use();
+    mParticleShader->Use();
     mVAO->Bind();
 
     if (mCamera->IsUpdated()) {
-        mShader->SetUniform("uProjView", mCamera->GetViewProjMatrix());
+        mParticleShader->SetUniform("uProjView", mCamera->GetViewProjMatrix());
         mCamera->SetUpdated(false);
     }
 
     glDrawArrays(GL_POINTS, 0, particleNb);
+
+    if (mWindow->IsCursorOnWindow()) {
+        mCursorShader->Use();
+        auto cursorPos = mWindow->GetCurrentCursorPosNDC();
+        mCursorShader->SetUniform("uCursorPos", cursorPos[0], cursorPos[1]);
+        glDrawArrays(GL_POINTS, 0, 1);
+    }
 }

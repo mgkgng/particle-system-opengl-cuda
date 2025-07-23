@@ -2,7 +2,7 @@
 #include "Application.hpp"
 
 ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window *window, Timer *timer)
-    : mParticlesNb(particlesNb), mWindow(window), mTimer(timer), mColor(std::string(kDefaultColor)) {
+    : mParticlesNb(particlesNb), mWindow(window), mTimer(timer), mColor(std::string(kDefaultColorParticle)) {
     mSSBO = std::make_unique<BufferObject>(GL_SHADER_STORAGE_BUFFER);
     mSSBO->InitializeData(nullptr, sizeof(Particle) * mParticlesNb);
     mSSBO->BindIndexedTarget(0);
@@ -38,9 +38,9 @@ void ParticleSystem::UpdateInitialPosition() {
 
 void ParticleSystem::InitializeCube(Particle** particles, size_t count, Color& color) {
     for (size_t i = 0; i < count; i++) {
-        const float x = Random::RandomCube();
-        const float y = Random::RandomCube();
-        const float z = Random::RandomCube();
+        const float x = Random::RandomCubePos();
+        const float y = Random::RandomCubePos();
+        const float z = Random::RandomCubePos();
 
         (*particles)[i].position = make_float3(x, y, z);
         (*particles)[i].initialPosition = make_float3(x, y, z);
@@ -52,9 +52,9 @@ void ParticleSystem::InitializeSphere(Particle** particles, size_t count, Color&
     constexpr float maximumRadius = 0.3f;
 
     for (size_t i = 0; i < count; i++) {
-        const float theta = Random::RandomSphere() * M_PI * 2.0;
-        const float phi = acos(2.0 * Random::RandomSphere() - 1.0); 
-        const float radialDistance = maximumRadius * cbrtf(Random::RandomSphere());
+        const float theta = Random::RandomSpherePos() * M_PI * 2.0;
+        const float phi = acos(2.0 * Random::RandomSpherePos() - 1.0); 
+        const float radialDistance = maximumRadius * cbrtf(Random::RandomSpherePos());
 
         const float x = radialDistance * sin(phi) * cos(theta);
         const float y = radialDistance * sin(phi) * sin(theta);

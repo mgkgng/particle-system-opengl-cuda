@@ -18,7 +18,6 @@ void InputHandler::onKey(int key, int scancode, int action, int mods) {
             }
             break;
         case GLFW_KEY_C:
-            mWindow->ChangeCursorVisibility();
             break;
         case GLFW_KEY_R:
             mParticleSystem->Restart(mProgramConfig->mShapeMode);
@@ -66,6 +65,11 @@ void InputHandler::onScroll(double xoffset, double yoffset) {
     mCamera->Zoom(yoffset / 50.0f);
 }
 
+void InputHandler::onCursorEnter(int entered) {
+    mWindow->SetCursorOnWindow(static_cast<bool>(entered));
+    std::cout << "entered: " << entered << std::endl; 
+}
+
 void InputHandler::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     auto* input = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
     if (input) input->onKey(key, scancode, action, mods);
@@ -89,6 +93,12 @@ void InputHandler::scrollCallback(GLFWwindow* window, double xoffset, double yof
     auto* input = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
     if (input) input->onScroll(xoffset, yoffset); 
 }
+
+void InputHandler::cursorEnterCallback(GLFWwindow* window, int entered) {
+    auto* input = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
+    if (input) input->onCursorEnter(entered);
+}
+
 
 float3 InputHandler::ScreenToWorld(const double mouseX, const double mouseY,
                                    const int screenWidth, const int screenHeight,

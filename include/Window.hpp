@@ -23,9 +23,11 @@ public:
     void SetWindowUserPointer(void* ptr) const { glfwSetWindowUserPointer(mWindow, ptr); }
     void UpdateWindowTitleWithFPS(float fps);
     std::array<double, 2> GetCurrentCursorPos();
-    void ChangeCursorVisibility();
+    std::array<float, 2> GetCurrentCursorPosNDC();
+    bool IsCursorOnWindow() const { return mIsCursorOnWindow; }
+    void SetCursorOnWindow(bool entered) { mIsCursorOnWindow = entered; }
 
 private:
     GLFWwindow* mWindow = nullptr;
-    bool mIsCursorVisible = true; 
+    bool mIsCursorOnWindow = false;
 };

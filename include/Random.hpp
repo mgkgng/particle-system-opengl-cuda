@@ -10,6 +10,6 @@ namespace Random {
     extern std::uniform_real_distribution<float> sphere_dis;
 
     float RandomColor();
-    float RandomCube();
-    float RandomSphere();
+    float RandomCubePos();
+    float RandomSpherePos();
 }

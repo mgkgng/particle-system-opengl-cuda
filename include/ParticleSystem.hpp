@@ -17,7 +17,8 @@ class Window;
 
 class ParticleSystem {
 public:
-    static constexpr std::string_view kDefaultColor = "#E60007";
+    static constexpr std::string_view kDefaultColorParticle = "#6A82FB";
+    static constexpr std::string_view kDefaultColorLight = "#E6007E";
 
     ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window* window, Timer* timer);
 

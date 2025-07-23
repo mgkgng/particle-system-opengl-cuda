@@ -18,14 +18,14 @@ public:
     void onMouseButton(int button, int action, int mods);
     void onCursorPos(double xpos, double ypos);
     void onScroll(double xoffset, double yoffset);
+    void onCursorEnter(int entered);
 
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
     static void cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
     static void windowCloseCallback(GLFWwindow* window);
     static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-
-    void SetCamera(Camera* camera) { mCamera = camera; }
+    static void cursorEnterCallback(GLFWwindow* window, int entered);
 
 private:
     static float3 ScreenToWorld(const double mouseX, const double mouseY,

@@ -10,7 +10,7 @@
 class Renderer {
 
 public:
-    Renderer(GLFWwindow* window, Camera* camera);
+    Renderer(Window* window, Camera* camera);
 
     void Clear();
     void Draw(size_t particleNb);
@@ -20,8 +20,10 @@ private:
     int mFramebufferWidth, mFramebufferHeight;
 
     std::unique_ptr<VertexArrayObject> mVAO;
-    std::unique_ptr<Shader> mShader;
+    std::unique_ptr<Shader> mParticleShader;
+    std::unique_ptr<Shader> mCursorShader;
 
+    Window *mWindow;
     Camera* mCamera;
 
 };

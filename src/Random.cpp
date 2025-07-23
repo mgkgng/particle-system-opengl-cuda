@@ -8,15 +8,7 @@ namespace Random {
     std::uniform_real_distribution<float> cube_dis(-0.5f, 0.5f);
     std::uniform_real_distribution<float> sphere_dis(0.0f, 1.0f);
 
-    float RandomColor() {
-        return color_dis(gen);
-    }
-
-    float RandomCube() {
-        return cube_dis(gen);
-    }
-
-    float RandomSphere() {
-        return sphere_dis(gen);
-    }
+    float RandomColor() { return color_dis(gen); }
+    float RandomCubePos() { return cube_dis(gen); }
+    float RandomSpherePos() { return sphere_dis(gen); }
 }
