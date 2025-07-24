@@ -15,7 +15,9 @@ struct Particle {
     float3 velocity;
     float _pad3;
     
-    float4 color;
+    float4 particleColor;
+    float4 lightColor;
+    
     float lifespan;
     float size;
     float _padding[2];

@@ -57,6 +57,8 @@ void InputHandler::onCursorPos(double xpos, double ypos) {
         auto cursorPos = mWindow->GetCurrentCursorPos();
         mProgramConfig->mGravityCenter.position = ScreenToWorld(cursorPos[0], cursorPos[1], Application::kWindowWidth, Application::kWindowHeight, mCamera->GetViewMatrix(), mCamera->GetProjMatrix(), mCamera->GetPosition());
     }
+
+    SetLightPosition();
 }
 
 void InputHandler::onScroll(double xoffset, double yoffset) {
@@ -67,7 +69,7 @@ void InputHandler::onScroll(double xoffset, double yoffset) {
 
 void InputHandler::onCursorEnter(int entered) {
     mWindow->SetCursorOnWindow(static_cast<bool>(entered));
-    std::cout << "entered: " << entered << std::endl; 
+    SetLightPosition();
 }
 
 void InputHandler::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -99,7 +101,6 @@ void InputHandler::cursorEnterCallback(GLFWwindow* window, int entered) {
     if (input) input->onCursorEnter(entered);
 }
 
-
 float3 InputHandler::ScreenToWorld(const double mouseX, const double mouseY,
                                    const int screenWidth, const int screenHeight,
                                    const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
@@ -117,4 +118,10 @@ float3 InputHandler::ScreenToWorld(const double mouseX, const double mouseY,
     auto res = cameraPos + t * rayWorld;
 
     return make_float3(res.x, res.y, 0.0f);
+}
+
+void InputHandler::SetLightPosition() {
+    auto cursorPos = mWindow->GetCurrentCursorPos();
+    auto lightPos = ScreenToWorld(cursorPos[0], cursorPos[1], Application::kWindowWidth, Application::kWindowHeight, mCamera->GetViewMatrix(), mCamera->GetProjMatrix(), mCamera->GetPosition());
+    mParticleSystem->SetLightPosition(lightPos);
 }

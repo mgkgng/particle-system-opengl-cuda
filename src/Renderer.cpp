@@ -15,7 +15,7 @@ void Renderer::Clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
-void Renderer::Draw(size_t particleNb) {
+void Renderer::Draw(ParticleSystem* particleSystem) {
     mParticleShader->Use();
     mVAO->Bind();
 
@@ -24,7 +24,8 @@ void Renderer::Draw(size_t particleNb) {
         mCamera->SetUpdated(false);
     }
 
-    glDrawArrays(GL_POINTS, 0, particleNb);
+    mParticleShader->SetUniform("uLightPos", particleSystem->GetLightPosition());
+    glDrawArrays(GL_POINTS, 0, particleSystem->GetCount());
 
     if (mWindow->IsCursorOnWindow()) {
         mCursorShader->Use();

@@ -13,7 +13,7 @@ public:
     Renderer(Window* window, Camera* camera);
 
     void Clear();
-    void Draw(size_t particleNb);
+    void Draw(ParticleSystem* particleSystem);
 
     void SetViewport(const int x, const int y, const int width, const int height) { glViewport(x, y, width, height); }
 private:

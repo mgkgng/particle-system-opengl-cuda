@@ -10,7 +10,8 @@ struct Particle {
     vec3 _velocity;
     float _pad3;
 
-    vec4 color;
+    vec4 particleColor;
+    vec4 lightColor;
 
     float lifespan;
     float size;
@@ -22,11 +23,17 @@ layout(std430, binding = 0) buffer ParticleData {
 };
 
 uniform mat4 uProjView;
-out vec4 vColor;
+out vec4 vParticleColor;
+out vec4 vLightColor;
+out vec3 vWorldPos;
 
 void main() {
     Particle p = particles[gl_VertexID];
-    vColor = p.color;
+
+    vParticleColor = p.particleColor;
+    vLightColor = p.lightColor;
+    vWorldPos = vec3(p.position.x, p.position.y, p.position.z);
+
     gl_Position = uProjView * vec4(p.position, 1.0f);
     gl_PointSize = 2.0f;
 }

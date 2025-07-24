@@ -2,7 +2,7 @@
 #include "Application.hpp"
 
 ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window *window, Timer *timer)
-    : mParticlesNb(particlesNb), mWindow(window), mTimer(timer), mColor(std::string(kDefaultColorParticle)) {
+    : mParticlesNb(particlesNb), mWindow(window), mTimer(timer), mParticleColor(std::string(kDefaultColorParticle)), mLightColor(std::string(kDefaultColorLight)) {
     mSSBO = std::make_unique<BufferObject>(GL_SHADER_STORAGE_BUFFER);
     mSSBO->InitializeData(nullptr, sizeof(Particle) * mParticlesNb);
     mSSBO->BindIndexedTarget(0);
@@ -15,8 +15,8 @@ ParticleSystem::ParticleSystem(size_t particlesNb, ShapeMode shapeMode, Window *
 
 void ParticleSystem::Restart(ShapeMode shapeMode) {
     Particle* particles = static_cast<Particle*>(mSSBO->MapBuffer(GL_WRITE_ONLY));
-    if (shapeMode == ShapeMode::Cube) InitializeCube(&particles, mParticlesNb, mColor);
-    else InitializeSphere(&particles, mParticlesNb, mColor);
+    if (shapeMode == ShapeMode::Cube) InitializeCube(&particles, mParticlesNb, mParticleColor, mLightColor);
+    else InitializeSphere(&particles, mParticlesNb, mParticleColor, mLightColor);
     mSSBO->UnmapBuffer();
 }
 
@@ -36,7 +36,7 @@ void ParticleSystem::UpdateInitialPosition() {
     mCudaComputeManager->Unmap();
 }
 
-void ParticleSystem::InitializeCube(Particle** particles, size_t count, Color& color) {
+void ParticleSystem::InitializeCube(Particle** particles, size_t count, Color& particleColor, Color& lightColor) {
     for (size_t i = 0; i < count; i++) {
         const float x = Random::RandomCubePos();
         const float y = Random::RandomCubePos();
@@ -44,11 +44,12 @@ void ParticleSystem::InitializeCube(Particle** particles, size_t count, Color& c
 
         (*particles)[i].position = make_float3(x, y, z);
         (*particles)[i].initialPosition = make_float3(x, y, z);
-        (*particles)[i].color = color.Perturb();
+        (*particles)[i].particleColor = particleColor.Perturb();
+        (*particles)[i].lightColor = lightColor.Perturb();
     }
 }
 
-void ParticleSystem::InitializeSphere(Particle** particles, size_t count, Color& color) {
+void ParticleSystem::InitializeSphere(Particle** particles, size_t count, Color& particleColor, Color& lightColor) {
     constexpr float maximumRadius = 0.3f;
 
     for (size_t i = 0; i < count; i++) {
@@ -62,6 +63,7 @@ void ParticleSystem::InitializeSphere(Particle** particles, size_t count, Color&
 
         (*particles)[i].position = make_float3(x, y, z);
         (*particles)[i].initialPosition = make_float3(x, y, z);
-        (*particles)[i].color = color.Perturb();
+        (*particles)[i].particleColor = particleColor.Perturb();
+        (*particles)[i].lightColor = lightColor.Perturb();
     }
 }

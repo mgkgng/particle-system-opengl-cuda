@@ -30,17 +30,21 @@ public:
 
     void SwitchComputeOn() { mComputeOn = !mComputeOn; }
     bool IsComputeOn() const { return mComputeOn; }
+    
+    void SetLightPosition(const float3& pos) { mLightPos = pos; }
+    const glm::vec3& GetLightPosition() const { return glm::vec3(mLightPos.x, mLightPos.y, mLightPos.z); }
 
 private:
-    static void InitializeCube(Particle** particles, size_t count, Color& color);
-    static void InitializeSphere(Particle** particles, size_t count, Color& color);
+    static void InitializeCube(Particle** particles, size_t count, Color& particleColor, Color& lightColor);
+    static void InitializeSphere(Particle** particles, size_t count, Color& particleColor, Color& lightColor);
 
     size_t mParticlesNb;
     std::unique_ptr<BufferObject> mSSBO;
     std::unique_ptr<CudaComputeManager> mCudaComputeManager;
     Window* mWindow;
     Timer* mTimer;
-    Color mColor;
-
+    Color mParticleColor;
+    Color mLightColor;
+    float3 mLightPos = { 0.0f, 0.0f, 1.0f };
     bool mComputeOn = true;
 };

@@ -33,6 +33,8 @@ private:
                                 const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
                                 const glm::vec3& cameraPos);
 
+    void SetLightPosition();
+
     Window* mWindow = nullptr;
     Camera* mCamera = nullptr;
     ProgramConfig* mProgramConfig = nullptr;

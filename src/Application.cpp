@@ -52,7 +52,7 @@ void Application::Run() {
         }
 
         mRenderer.Clear();
-        mRenderer.Draw(mParticleSystem.GetCount());
+        mRenderer.Draw(&mParticleSystem);
 
         mWindow.SwapBuffer();
         mWindow.PollEvents();
