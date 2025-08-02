@@ -1,15 +1,12 @@
 #include "ImGuiLayer.hpp"
 
-ImGuiLayer::ImGuiLayer(GLFWwindow* window) {
+ImGuiLayer::ImGuiLayer(GLFWwindow* window, ProgramConfig* programConfig) : mProgramConfig(programConfig) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
-
-    // ImGui_ImplGlfw_InitForOpenGL(window, true);
-    // ImGui_ImplOpenGL3_Init("#version 330");
 }
 
 ImGuiLayer::~ImGuiLayer() {
@@ -20,7 +17,7 @@ ImGuiLayer::~ImGuiLayer() {
 
 void ImGuiLayer::SetUI() {
     ImGui::Begin("Controls");
-    // ImGui::SliderFloat("Size", &particleSize, 0.1f, 10.0f);
+    ImGui::SliderFloat("Gravity Strength", &mProgramConfig->mGravityCenter.strength, 0.01f, 10.0f);
     // ImGui::ColorEdit3("Color", (float*)&particleColor);
     // ImGui::Checkbox("Enable Gravity", &gravityEnabled);
     ImGui::End();

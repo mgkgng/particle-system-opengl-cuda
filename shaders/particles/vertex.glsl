@@ -35,5 +35,5 @@ void main() {
     vWorldPos = vec3(p.position.x, p.position.y, p.position.z);
 
     gl_Position = uProjView * vec4(p.position, 1.0f);
-    gl_PointSize = 2.0f;
+    //gl_PointSize = 2.0f;
 }

@@ -11,7 +11,7 @@ class Camera;
 
 class InputHandler {
 public:
-    InputHandler(Window* window, Camera* camera, ProgramConfig* programConfig, ParticleSystem* particleSystem, Timer* timer) 
+    InputHandler(Window* window, Camera* camera, ProgramConfig* programConfig, ParticleSystem* particleSystem, Timer* timer, ImGuiLayer* imGuiLayer) 
         : mWindow(window), mCamera(camera), mProgramConfig(programConfig), mParticleSystem(particleSystem), mTimer(timer) {}
 
     void onKey(int key, int scancode, int action, int mods);

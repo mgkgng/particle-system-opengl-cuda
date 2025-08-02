@@ -1,20 +1,19 @@
 #include "particle.cuh"
 
-__device__ float3 ApplyGravity(float3 position, GravityCenter gravityCenter) {
-    float3 direction;
-    direction.x = gravityCenter.position.x - position.x;
-    direction.y = gravityCenter.position.y - position.y;
-    direction.z = gravityCenter.position.z - position.z;
+__device__ float3 ApplyGravity(float3 position, float3 velocity, GravityCenter gravityCenter) {
+    const float MIN_DIST = 11.5f;
+    const float PARTICLE_MASS = 100.0f;
+    const float GRAVITY = 250.0f * 10.0f;
 
-    float distanceSq = direction.x * direction.x + direction.y * direction.y + direction.z * direction.z + 1e-6f; // avoid division by zero
-    float invDistance = rsqrtf(distanceSq);
-    direction.x *= invDistance;
-    direction.y *= invDistance;
-    direction.z *= invDistance;
+    float3 direction = gravityCenter.position - position;
+    float dist = length(direction);
 
-    return { direction.x * gravityCenter.strength, 
-             direction.y * gravityCenter.strength, 
-             direction.z * gravityCenter.strength };
+    if (dist < MIN_DIST) dist = MIN_DIST;
+
+    float3 force = GRAVITY * normalize(direction) / (dist * dist + 1e-3f);
+    float3 acceleration = force / PARTICLE_MASS;
+    
+    return velocity + acceleration;
 }
 
 __device__ float3 ApplyPerlin(float3 initialPosition, float elapsedTime) {
@@ -37,7 +36,7 @@ __global__ void UpdateParticles(Particle* particles, GravityCenter gravityCenter
     if (gravityCenter.mode == GravityMode::Off) {
         p.position = ApplyPerlin(p.initialPosition, elapsedTime);
     } else {
-        p.velocity += ApplyGravity(p.position, gravityCenter);
+        p.velocity = ApplyGravity(p.position, p.velocity, gravityCenter);
 
         const float dt = 0.0001f;
         p.position.x += p.velocity.x * dt;

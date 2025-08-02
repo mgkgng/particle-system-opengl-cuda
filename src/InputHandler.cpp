@@ -21,6 +21,7 @@ void InputHandler::onKey(int key, int scancode, int action, int mods) {
             break;
         case GLFW_KEY_R:
             mParticleSystem->Restart(mProgramConfig->mShapeMode);
+            mCamera->Reset();
             mTimer->Reset();
             break;
         case GLFW_KEY_P:
@@ -29,7 +30,8 @@ void InputHandler::onKey(int key, int scancode, int action, int mods) {
             auto cursorPos = mWindow->GetCurrentCursorPos();
             mProgramConfig->mGravityCenter.position = ScreenToWorld(cursorPos[0], cursorPos[1], Application::kWindowWidth, Application::kWindowHeight, mCamera->GetViewMatrix(), mCamera->GetProjMatrix(), mCamera->GetPosition());
             break;
-        case GLFW_KEY_H:
+        case GLFW_KEY_I:
+            mProgramConfig->mShowImGui = !mProgramConfig->mShowImGui;
             break;
         case GLFW_KEY_SPACE:
             mParticleSystem->SwitchComputeOn();

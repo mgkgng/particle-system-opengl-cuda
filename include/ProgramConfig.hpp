@@ -14,9 +14,11 @@ public:
 private:
     friend class Application;
     friend class InputHandler;
+    friend class ImGuiLayer;
 
     ShapeMode mShapeMode = ShapeMode::Sphere;
     GravityCenter mGravityCenter = { make_float3(0.0f, 0.0f, 0.0f), kGravityForceDefault, GravityMode::Off };
     bool mGravityFollow = false;
     size_t mParticleCount = 1000000;
+    bool mShowImGui = false;
 };

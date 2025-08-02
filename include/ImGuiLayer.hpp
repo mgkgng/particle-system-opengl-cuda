@@ -6,14 +6,20 @@
 
 #include "Window.hpp"
 #include "ParticleSystem.hpp"
+#include "ProgramConfig.hpp"
 
 class ImGuiLayer {
 public:
-    ImGuiLayer(GLFWwindow* window);
+    ImGuiLayer(GLFWwindow* window, ProgramConfig* programConfig);
     ~ImGuiLayer();
 
     void BeginFrame();
     void SetUI();
     void Draw(ParticleSystem& system);
     void EndFrame();
+
+    bool IsHovered() { return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow); }
+
+private:
+    ProgramConfig* mProgramConfig;
 };

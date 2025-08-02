@@ -15,7 +15,7 @@ void main() {
 
     float dist = length(uLightPos - vWorldPos);
 
-    float lightRadius = 3.5;
+    float lightRadius = 6.5;
     // float intensity = clamp(1.0 - (dist / lightRadius), 0.0, 1.0);
     float intensity = pow(1.0 - smoothstep(0.0, lightRadius, dist), 2.0);
 

@@ -5,6 +5,14 @@ Camera::Camera() {
     mViewMatrix = glm::lookAt(mPosition, glm::vec3(0.0f), mUp);
     mProjMatrix = glm::perspective(glm::radians(kFOV), Application::kAspectRatio, kNearPlane, kFarPlane);
 }
+void Camera::Reset() {
+    mPosition = glm::vec3(kInitialPosX, kInitialPosY, kInitialPosZ);
+    mUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    mDistance = glm::distance(mPosition, mUp);
+
+    UpdateView();
+}
+
 
 void Camera::Rotate(float deltaYaw, float deltaPitch) {
     mYaw += deltaYaw * Camera::kRotSensitivity;

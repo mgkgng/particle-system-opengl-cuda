@@ -1,11 +1,11 @@
 #include "Application.hpp"
 
 Application::Application(ProgramConfig& programConfig)
-    : mImGuiLayer(mWindow.GetWindow())
-    , mProgramConfig(programConfig)
+    : mProgramConfig(programConfig)
+    , mImGuiLayer(mWindow.GetWindow(), &mProgramConfig)
     , mParticleSystem(programConfig.mParticleCount, programConfig.mShapeMode, &mWindow, &mTimer)
     , mRenderer(&mWindow, &mCamera)
-    , mInputHandler(&mWindow, &mCamera, &mProgramConfig, &mParticleSystem, &mTimer) { 
+    , mInputHandler(&mWindow, &mCamera, &mProgramConfig, &mParticleSystem, &mTimer, &mImGuiLayer) { 
         mWindow.SetWindowUserPointer(&mInputHandler);
     }
 
@@ -46,6 +46,9 @@ void Application::Run() {
             mTimer.SetFPSUpdated(false);
         }
 
+        if (mProgramConfig.mShowImGui)
+            mImGuiLayer.BeginFrame();
+
         if (mParticleSystem.IsComputeOn()) {
             mParticleSystem.Update(mProgramConfig.mGravityCenter);
             mTimer.Update();
@@ -53,6 +56,12 @@ void Application::Run() {
 
         mRenderer.Clear();
         mRenderer.Draw(&mParticleSystem);
+
+        if (mProgramConfig.mShowImGui) {
+            mImGuiLayer.SetUI();
+            mImGuiLayer.Draw(mParticleSystem);
+            mImGuiLayer.EndFrame();
+        }
 
         mWindow.SwapBuffer();
         mWindow.PollEvents();

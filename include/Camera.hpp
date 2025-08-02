@@ -21,6 +21,7 @@ public:
 
     void Rotate(float yaw, float pitch);
     void Zoom(const float dz);
+    void Reset();
 
     const glm::mat4& GetViewProjMatrix() const { return mProjMatrix * mViewMatrix; }
     const glm::mat4& GetViewMatrix() const { return mViewMatrix; }
